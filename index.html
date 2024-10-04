@@ -8,13 +8,28 @@
 </head>
 <body>
     <div class="flashcardContainer">
-        <div class="card">
-            <div class="cardFront" id="cardFront">
+        <div class="cardContainer">
+            <div class="showNext" id="showNext">
+                <img src="./img/arrow.png" alt="Flip left" style="width: 100%; height: 50%; filter: invert(70%);">
+                <img src="./img/arrow.png" alt="Flip left" style="width: 100%; height: 50%; filter: invert(70%);">
             </div>
-            <div class="cardBack" id="cardBack">
+            <div class="card">
+                <div class="cardFront" id="cardFront">
+                    <div id="frontWord">gowno</div>
+                    <button class="ttsButton" id="frontTtsButton">
+                        <img src="./img/speaker.png" alt="TTS" style="width: 400%; height: 140%; filter: invert(100%) brightness(100%);">
+                    </button>
+                </div>
+                <div class="cardBack" id="cardBack">
+                    <div id="backWord">gowno</div>
+                    <button class="ttsButton" id="backTtsButton">
+                        <img src="./img/speaker.png" alt="TTS" style="width: 400%; height: 140%; filter: invert(50%);">
+                    </button>
+                </div>
             </div>
         </div>
         <input id="cardInput" type="text" autocomplete="off" placeholder="Type your answer here!"> 
     </div>
+    <script type="module" src="main.js"></script>
 </body>
 </html>

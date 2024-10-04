@@ -1,0 +1,13 @@
+
+{
+  "lang": ["pl", "eng"],
+
+  "cards": [
+    ["japko", "apple"],
+    ["kot", "cat"],
+    ["pies", "dog"],
+    ["dom", "house"],
+    ["auto", "car"]
+  ]
+}
+
