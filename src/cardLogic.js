@@ -6,15 +6,12 @@ export const cardInput = document.getElementById("cardInput");
 const showNext = document.getElementById("showNext");
 
 export let hasAnimationStarted = false;
+let storedCards = [];
 let lastKey = 0;
 
 function setLocalConfig(data){
     localStorage.setItem("langInfo", JSON.stringify(data.lang));
-
-    for(let cardID in data.cards){
-        let card = data.cards[cardID];
-        localStorage.setItem(card[0], card[1]);
-    }
+    localStorage.setItem("cards", JSON.stringify(data.cards));
 }
 
 export async function fetchCardBase(cardBaseName){
@@ -31,8 +28,8 @@ export async function fetchCardBase(cardBaseName){
 function getCardKey(){
     let key;
     do{
-        key = Math.floor(Math.random() * localStorage.length);
-    }while(localStorage.key(key) === "langInfo" || key === lastKey);
+        key = Math.floor(Math.random() * storedCards.length);
+    }while(key === lastKey);
 
     lastKey = key;
 
@@ -40,9 +37,11 @@ function getCardKey(){
 }
 
 export function cardsInit(){
+    storedCards = JSON.parse(localStorage.getItem("cards"));
     const key = getCardKey();
-    frontWord.innerText = localStorage.key(key);
-    backWord.innerText = localStorage.getItem(localStorage.key(key));
+    console.log(storedCards[key][0]);
+    frontWord.innerText = storedCards[key][0];
+    backWord.innerText = storedCards[key][1];
 }
 
 function startCardFlip(newFrontWord, newBackWord){
@@ -88,9 +87,8 @@ export function animateCard(animation, time){
 
 export function getNextCard(){
     const key = getCardKey();
-    const newWord = localStorage.key(key);
-    const newTranslation = localStorage.getItem(newWord);
-    console.log(newWord, newTranslation);
+    const newWord = storedCards[key][0];
+    const newTranslation = storedCards[key][1];
     hasAnimationStarted = true;
     cardInput.blur();
     cardInput.disabled = true;
