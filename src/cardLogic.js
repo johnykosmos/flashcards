@@ -1,5 +1,3 @@
-import {simpleAnimation, hasAnimationStarted, setAnimationStart} from "./animationHandler.js"
-
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -11,11 +9,52 @@ const showNext = document.getElementById("showNext");
 let storedCards = [];
 let lastKey = 0;
 let mistakeCounter = 0;
+let hasAnimationStarted = false;
 
 
 function setLocalConfig(data){
     localStorage.setItem("langInfo", JSON.stringify(data.lang));
     localStorage.setItem("cards", JSON.stringify(data.cards));
+}
+
+function animateCard(animation, time){
+    frontCard.classList.add(animation); 
+    hasAnimationStarted = true;
+    setTimeout(function(){
+        hasAnimationStarted = false;
+        frontCard.classList.remove(animation);
+    }, time);
+}
+
+function startCardFlip(newFrontWord, newBackWord){
+    frontCard.classList.remove("flipFrontLeft");
+    backCard.classList.remove("flipBackLeft");
+    frontCard.classList.add("flipFrontRight");
+    backCard.classList.add("flipBackRight");
+
+    setTimeout(() => {
+        frontWord.innerText = newFrontWord;
+    }, 2000);
+
+    showNext.classList.add("visible");
+    showNext.addEventListener("click", () => flipCardLeft(newBackWord));
+}
+
+function flipCardLeft(newBackWord){
+    showNext.removeEventListener("click", () => flipCardLeft(newBackWord));
+    showNext.classList.remove("visible");
+    backCard.classList.add("flipBackLeft");    
+    animateCard("flipFrontLeft", 3000);
+    frontCard.classList.remove("flipFrontRight");
+    backCard.classList.remove("flipBackRight");
+
+    setTimeout(() => {
+        cardInput.value = '';
+        cardInput.disabled = false;
+        cardInput.focus();
+        backWord.innerText = newBackWord;
+    }, 2000);
+
 }
 
 export async function fetchCardBase(cardBaseName){
@@ -48,42 +87,11 @@ export function cardsInit(){
     backWord.innerText = storedCards[key][1];
 }
 
-function startCardFlip(newFrontWord, newBackWord){
-    frontCard.classList.remove("flipFrontLeft");
-    backCard.classList.remove("flipBackLeft");
-    frontCard.classList.add("flipFrontRight");
-    backCard.classList.add("flipBackRight");
-
-    setTimeout(() => {
-        frontWord.innerText = newFrontWord;
-    }, 2000);
-
-    showNext.classList.add("visible");
-    showNext.addEventListener("click", () => flipCardLeft(newBackWord));
-}
-
-function flipCardLeft(newBackWord){
-    showNext.removeEventListener("click", () => flipCardLeft(newBackWord));
-    showNext.classList.remove("visible");
-    backCard.classList.add("flipBackLeft");    
-    simpleAnimation(frontCard, "flipFrontLeft", 3000);
-    frontCard.classList.remove("flipFrontRight");
-    backCard.classList.remove("flipBackRight");
-
-    setTimeout(() => {
-        cardInput.value = '';
-        cardInput.disabled = false;
-        cardInput.focus();
-        backWord.innerText = newBackWord;
-    }, 2000);
-
-}
-
 function getNextCard(){
     const key = getCardKey();
     const newWord = storedCards[key][0];
     const newTranslation = storedCards[key][1];
-    setAnimationStart(true);
+    hasAnimationStarted = true;
     cardInput.blur();
     cardInput.disabled = true;
 
@@ -97,11 +105,11 @@ export function handleCardLogic(){
     cardInput.addEventListener("keydown", (event) => {
         if(event.key === "Enter" && !hasAnimationStarted){
             if(backWord.innerText === cardInput.value){
-                simpleAnimation(frontCard, "goodAnswer", 1000); 
+                animateCard("goodAnswer", 1000); 
                 setTimeout(() => getNextCard(), 1000);
             }
             else{
-                simpleAnimation(frontCard, "badAnswer", 800);
+                animateCard("badAnswer", 800);
                 mistakeCounter++;
                 if(mistakeCounter === 3){
                     mistakeCounter = 0;
