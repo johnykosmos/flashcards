@@ -1,13 +1,17 @@
-export const frontCard = document.getElementById("cardFront");
-export const backCard = document.getElementById("cardBack");
+import {simpleAnimation, hasAnimationStarted, setAnimationStart} from "./animationHandler.js"
+
+
+const frontCard = document.getElementById("cardFront");
+const backCard = document.getElementById("cardBack");
 const frontWord = document.getElementById("frontWord");
-export const backWord = document.getElementById("backWord");
-export const cardInput = document.getElementById("cardInput");
+const backWord = document.getElementById("backWord");
+const cardInput = document.getElementById("cardInput");
 const showNext = document.getElementById("showNext");
 
-export let hasAnimationStarted = false;
 let storedCards = [];
 let lastKey = 0;
+let mistakeCounter = 0;
+
 
 function setLocalConfig(data){
     localStorage.setItem("langInfo", JSON.stringify(data.lang));
@@ -62,7 +66,7 @@ function flipCardLeft(newBackWord){
     showNext.removeEventListener("click", () => flipCardLeft(newBackWord));
     showNext.classList.remove("visible");
     backCard.classList.add("flipBackLeft");    
-    animateCard("flipFrontLeft", 3000);
+    simpleAnimation(frontCard, "flipFrontLeft", 3000);
     frontCard.classList.remove("flipFrontRight");
     backCard.classList.remove("flipBackRight");
 
@@ -75,21 +79,11 @@ function flipCardLeft(newBackWord){
 
 }
 
-export function animateCard(animation, time){
-    frontCard.classList.add(animation); 
-        hasAnimationStarted = true;
-        setTimeout(function(){
-            hasAnimationStarted = false;
-            frontCard.classList.remove(animation);
-        }, time);
-}
-
-
-export function getNextCard(){
+function getNextCard(){
     const key = getCardKey();
     const newWord = storedCards[key][0];
     const newTranslation = storedCards[key][1];
-    hasAnimationStarted = true;
+    setAnimationStart(true);
     cardInput.blur();
     cardInput.disabled = true;
 
@@ -97,6 +91,24 @@ export function getNextCard(){
         startCardFlip(newWord, newTranslation);
     else
         startCardFlip(newTranslation, newWord);
+}
 
+export function handleCardLogic(){
+    cardInput.addEventListener("keydown", (event) => {
+        if(event.key === "Enter" && !hasAnimationStarted){
+            if(backWord.innerText === cardInput.value){
+                simpleAnimation(frontCard, "goodAnswer", 1000); 
+                setTimeout(() => getNextCard(), 1000);
+            }
+            else{
+                simpleAnimation(frontCard, "badAnswer", 800);
+                mistakeCounter++;
+                if(mistakeCounter === 3){
+                    mistakeCounter = 0;
+                    setTimeout(() => getNextCard(), 800);
+                }
+            }
 
+        }
+    });
 }
