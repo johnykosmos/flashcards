@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login/styles.css') }}">
+</head>
+<body>
+    <div class="loginFormContainer">
+        <form class="loginForm" action="/" method="POST">
+            <input class="credInput" id="loginInput" name="login" type="text" type="text" autocomplete="off" placeholder="Login">
+            <input class="credInput" id="passwordInput" name="password" type="password" autocomplete="off" placeholder="Password"> 
+            <button class="loginButton" type="submit" name="action" value="submit_credentials"> LOGIN </button>
+        </form>
+    </div>
+</body>
+</html>
+
