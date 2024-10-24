@@ -1,0 +1,52 @@
+.settingsContainer{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    background-color: white;
+    padding: 5vh; 
+    gap: 3.5vh;
+}
+
+.settingsContainerBar{
+    position: absolute;
+    bottom: 110vh;
+    box-shadow: 0vh 0.5vh 1vh 0.2vh grey;
+}
+
+.optionButton{
+    height: 7vh;
+    width: 100%;
+    background-color: #4285F4;
+    border: 0;
+    border-radius: 2vh;
+    box-shadow: 0vh 0vh 5vh  grey;
+    color: white;
+    font-size: 1.5em;
+}
+
+.settingsButton:hover, .optionButton:hover{
+    transform: scale(0.95);
+}
+
+.settingsButton:active, .optionButton:active{
+    transform: scale(0.9);
+}
+
+@keyframes openSettings{
+    100%{bottom: 0;}
+}
+
+@keyframes closeSettings{
+    0%{bottom: 0;}
+    100%{bottom: 110vh;}
+}
+
+.settingsContainer.open{
+    animation: openSettings forwards 0.8s; 
+}
+
+.settingsContainer.close{
+    animation: closeSettings forwards 0.8s;
+}

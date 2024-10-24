@@ -17,6 +17,17 @@ function setLocalConfig(data){
     localStorage.setItem("cards", JSON.stringify(data.cards));
 }
 
+export async function fetchCardBase(cardBaseName){
+    try{
+        const response = await fetch(cardBaseName);
+        const data = await response.json();
+        setLocalConfig(data);      
+    }
+    catch(error){
+        console.error("Couldn't fetch the card base! ", error);
+    }
+}
+
 function animateCard(animation, time){
     frontCard.classList.add(animation); 
     hasAnimationStarted = true;
@@ -55,17 +66,6 @@ function flipCardLeft(newBackWord){
         backWord.innerText = newBackWord;
     }, 2000);
 
-}
-
-export async function fetchCardBase(cardBaseName){
-    try{
-        const response = await fetch(cardBaseName);
-        const data = await response.json();
-        setLocalConfig(data);      
-    }
-    catch(error){
-        console.error("Couldn't fetch the card base! ", error);
-    }
 }
 
 function getCardKey(){

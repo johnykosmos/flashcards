@@ -1,0 +1,67 @@
+*{
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    font-family: "arial";
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loginFormContainer{
+    padding-top: 8vh;
+}
+
+.loginForm{
+    height: 50vh;
+    width: 40vh; 
+    display: flex;
+    justify-content: center;
+    padding-left: 5vh;
+    flex-direction: column;
+    box-shadow: 0vh 0.5vh 1vh 0.3vh grey;
+    border-radius: 1vh;
+    gap: 2.5vh;
+}
+
+.loginText{
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.credInput{
+    height: 6vh;
+    width: 25vh;
+    padding: 1vh;
+    font-size: 1.2em;
+    border: 0.5vh solid lightgrey;
+    border-radius: 1vh;
+}
+
+.loginButton{
+    height: 6vh;
+    width: 30vh;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    border: 0;
+    border-radius: 1vh;
+    background-color: #4285F4;
+}
+
+.loginButton:hover{
+    background-color: #7ba6ed;
+}
+
+.loginButton:active{
+    transform: scale(0.9);
+}
