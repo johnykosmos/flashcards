@@ -11,36 +11,57 @@
 
 .settingsContainerBar{
     position: absolute;
-    bottom: 110vh;
+    top: 110vh;
     box-shadow: 0vh 0.5vh 1vh 0.2vh grey;
 }
 
-.optionButton{
+.tabContainer{
     height: 7vh;
-    width: 100%;
-    background-color: #4285F4;
-    border: 0;
+    width: 110%;
+    padding: 2vh;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background-color: lightgrey;
     border-radius: 2vh;
-    box-shadow: 0vh 0vh 5vh  grey;
-    color: white;
-    font-size: 1.5em;
+    gap: 1vh;
 }
 
-.settingsButton:hover, .optionButton:hover{
+.optionButton{
+    height: 5vh;
+    width: 90%;
+    background-color: transparent;
+    border: 0;
+    border-radius: 1vh;
+    color: grey;
+    font-size: 2vh;
+}
+
+.settingsButton:hover{
     transform: scale(0.95);
 }
 
-.settingsButton:active, .optionButton:active{
+.settingsButton:active{
     transform: scale(0.9);
 }
 
+.optionButton:hover{
+    background-color: #e6e1e1;
+}
+
+.optionButton:active, .optionButton.active{
+    background-color: white;
+    border-bottom: 0.3vh #4285F4 solid;
+    color: #4285F4;
+}
+
 @keyframes openSettings{
-    100%{bottom: 0;}
+    100%{top: 0;}
 }
 
 @keyframes closeSettings{
-    0%{bottom: 0;}
-    100%{bottom: 110vh;}
+    0%{top: 0;}
+    100%{top: 110vh;}
 }
 
 .settingsContainer.open{
