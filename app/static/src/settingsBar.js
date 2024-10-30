@@ -6,6 +6,8 @@ const quitButton = document.getElementById("quitSettingsButton");
 const tabContainer = document.getElementById("tabContainer");
 const tabContent = document.getElementById("tabContent");
 
+let activeTab;
+
 
 export function handleSettingsSidebar(){
     settingsButton.addEventListener("click", () => {
@@ -19,19 +21,21 @@ export function handleSettingsSidebar(){
 }
 
 export function generateTabs(tabs){
-    tabs.forEach((element) => {
+    tabs.forEach((element, index) => {
         const tab = document.createElement("button");
+        if(index === 0)
+            activeTab = tab;
         tab.textContent = element.name;
         tab.classList.add("optionButton");
         tab.addEventListener("click", function(){
-            tabContainer.querySelectorAll(".optionButton").forEach((btn) => {
-               btn.classList.remove("active"); 
-            });
+            activeTab.classList.remove("active");
+            activeTab = this;
             this.classList.add("active");
             tabContent.innerHTML = "";
             tabContent.appendChild(element.content);
         });
         tabContainer.appendChild(tab);
     });       
+    activeTab.classList.add("active");
 }
 
