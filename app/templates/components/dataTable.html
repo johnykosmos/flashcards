@@ -1,0 +1,20 @@
+<table class="dataTable">
+                        <thead>
+                            <tr>
+                                {% for header in headers %}  
+                                    <th> {{ header }} </th>
+                                {% endfor %}
+                                <th> Remove </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for element in data %}
+                                <tr>
+                                    {% for field in headers %}
+                                        <td> {{ element[field | lower] }} </td>
+                                    {% endfor %}
+                                    <td> <button class="removeButton"> X </button> </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
