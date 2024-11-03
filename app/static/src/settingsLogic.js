@@ -42,4 +42,8 @@ export function tabsInit(){
     });
 }
 
+function removeButtonsInit(){
+    const buttons = tabContent.querySelectorAll(".removeButton");
+
+}
 

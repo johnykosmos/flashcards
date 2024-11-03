@@ -1,6 +1,6 @@
 import {handleCardLogic, cardsInit, fetchCardBase} from "./cardLogic.js"
 
-import {handleSettingsSidebar} from "./settingsBar.js"
+import {handleSettingsSidebar} from "./settingsLogic.js"
 
 
 async function main(){

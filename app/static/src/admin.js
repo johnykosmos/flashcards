@@ -1,14 +1,14 @@
 
-import {generateTabs} from "./settingsBar.js"
+import {tabsInit} from "./settingsLogic.js"
+import {openPopup, popupInit, PopupType} from "./popupLogic.js"
 
-
-const adminTabs = [{name: "Users", content: document.createElement('div').appendChild(document.createTextNode('Content for Tab 1')) },
-    {name: "CardBases", content: ""}]
 
 
 
 function main(){
-    generateTabs(adminTabs);   
+    tabsInit();
+    popupInit(); 
+    document.getElementById("addButton").addEventListener("click",() =>  openPopup(PopupType.addUser));
 }
 
 main();
