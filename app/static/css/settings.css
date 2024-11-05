@@ -37,15 +37,76 @@
     font-size: 2vh;
 }
 
+.tab{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; 
+    position: absolute;
+    left: 10%;
+    visibility: hidden;
+    gap: 4vh;
+}
+
+.tableContainer{
+    height: 25vh;
+    width: 80vw;
+    border: none;
+    border-radius: 2vh;
+    background-color: lightgrey;
+    text-align: center;
+    overflow: auto;
+}
+
+.tableContainer .removeButton{
+    background-color: transparent;
+    width: 100%;
+    border: 0;
+    border-radius: 1vh;
+    color: grey;
+    font-size: 2vh;
+}
+
+
+.tableContainer th{
+    padding: 1vh;
+}
+
+.tableContainer td{
+    padding: 1vh 1vh 0.3vh 1vh;
+    color: grey;
+    font-weight: bold; 
+}
+
+.manageButtonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row; 
+}
+
+.manageButton{
+    height: 6vh;
+    width: 8vh;
+    color: white;
+    background-color: #4285F4;
+    font-size: 2vh;
+    font-weight: bold;
+    border: none;
+    border-radius: 2vh;
+    box-shadow: 0vh 0.5vh 1vh 0.2vh grey;
+    cursor: pointer;
+}
+
 .settingsButton:hover{
     transform: scale(0.95);
 }
 
-.settingsButton:active{
+.settingsButton:active, .manageButton:active{
     transform: scale(0.9);
 }
 
-.optionButton:hover{
+.optionButton:hover, .tableContainer .removeButton:hover{
     background-color: #e6e1e1;
 }
 
