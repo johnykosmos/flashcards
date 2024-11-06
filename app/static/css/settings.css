@@ -7,13 +7,11 @@
     background-color: white;
     padding: 5vh; 
     gap: 3.5vh;
-}
-
-.settingsContainerBar{
     position: absolute;
     top: 110vh;
     box-shadow: 0vh 0.5vh 1vh 0.2vh grey;
 }
+
 
 .tabContainer{
     height: 7vh;
@@ -25,6 +23,10 @@
     background-color: lightgrey;
     border-radius: 2vh;
     gap: 1vh;
+}
+
+.tabContent{
+    padding-top: 15vh;
 }
 
 .optionButton{

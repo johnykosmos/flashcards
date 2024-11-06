@@ -6,6 +6,7 @@
     <title>Flashcards</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/flashcards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popup.css') }}">
 </head>
 <body>
     <div class="flashcardContainer">
@@ -16,13 +17,13 @@
             </div>
             <div class="card">
                 <div class="cardFront" id="cardFront">
-                    <div id="frontWord">gowno</div>
+                    <div id="frontWord"></div>
                     <button class="ttsButton" id="frontTtsButton">
                         <img src="{{ url_for('static', filename='img/speaker.png') }}" alt="TTS" style="width: 400%; height: 140%; filter: invert(100%) brightness(100%);">
                     </button>
                 </div>
                 <div class="cardBack" id="cardBack">
-                    <div id="backWord">gowno</div>
+                    <div id="backWord"></div>
                     <button class="ttsButton" id="backTtsButton">
                         <img src="{{ url_for('static', filename='img/speaker.png') }}" alt="TTS" style="width: 400%; height: 140%; filter: invert(50%);">
                     </button>
@@ -36,12 +37,22 @@
             </button>
         </div>
     </div>
-    <div class="settingsContainer settingsContainerBar" id="settingsContainer">
+    <div class="settingsContainer" id="settingsContainer">
         <div class="tabContainer" id="tabContainer">
-            <button class="optionButton " id=""> opcja 1</button>
-            <button class="optionButton" id=""> opcja 2</button>
-            <button class="optionButton" id=""> opcja 3</button>
-            <button class="optionButton active" id="quitSettingsButton">Go back</button>
+            {% set tabs=["Cards", "Config" ,"Quit"] %}
+            {% include "components/tabs.html" with context %}
+        <div class="tabContent" id="tabContent">
+            <div class="tab" id="tab1">
+                <div class="tableContainer">
+                    {% include "components/dataTable.html" with context %} 
+                </div>
+                <div class="manageButtonContainer">
+                    <button class="manageButton" id="addButton"> Add Cardbase </button>
+                </div>
+            </div>
+            <div class="tab" id="tab2">tab2</div>
+        </div>
+        {% include "components/popup.html" with context %}
         </div>
         <div class="tabContent" id="tabContent">
         </div>

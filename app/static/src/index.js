@@ -1,7 +1,14 @@
 import {handleCardLogic, cardsInit, fetchCardBase} from "./cardLogic.js"
 
-import {handleSettingsSidebar} from "./settingsLogic.js"
+import {handleSettingsSidebar, tabsInit} from "./tabLogic.js"
+import {openPopup, popupInit, PopupType} from "./popupLogic.js"
 
+
+function initMain(){
+    tabsInit();
+    popupInit();
+    handleSettingsSidebar();
+}
 
 async function main(){
     localStorage.clear();
@@ -13,8 +20,8 @@ async function main(){
     console.log(localStorage);
 
     handleCardLogic(); 
-
-    handleSettingsSidebar();
+    
+    initMain();
 }
 
 main();

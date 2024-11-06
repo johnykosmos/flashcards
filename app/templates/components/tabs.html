@@ -1,5 +1,9 @@
 <div class="tabContainer" id="tabContainer">
     {% for tab in tabs %}
-        <button class="optionButton"> {{ tab }} </button> 
+        {% if tab != "Quit" %}
+            <button class="optionButton"> {{ tab }} </button> 
+        {% else %}
+            <button class="optionButton" id="closeButton"> Close </button>
+        {% endif %}
     {% endfor %}
 </div>

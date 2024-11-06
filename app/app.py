@@ -1,7 +1,8 @@
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 from models import db, User
-
+from routes import main
+import click
 
 app = Flask(__name__)
 
@@ -13,73 +14,40 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+app.register_blueprint(main)
 
-@app.route('/', methods=["GET"])
-def get_index():
+@app.cli.command("show-users")
+def show_users():
+    for user in User.query.all():
+        print(f"ID: {user.id} | Login: {user.login}, | Password: {user.password}")
 
-    return render_template("login.html", action_route='/')
-
-@app.route('/', methods=["POST"])
-def login():
-    login = request.form["login"]
-    password = request.form["password"]
-    user = User.query.filter_by(login=login, password=password).first() 
-
-    if user:
-        return render_template("index.html")
-
-    return render_template("login.html", action_route='/')
-
-@app.route('/admin', methods=["GET"])
-def get_admin():
-    #return render_template("login.html", action_route='/admin')
-    users = User.query.filter_by(is_admin=False)
-    headers = ["Login", "Password"]
-
-    return render_template("admin.html", data=users, headers=headers)
-
-
-@app.route('/admin', methods=["POST"])
-def admin_login():
-    login = request.form["login"]
-    password = request.form["password"]
-    user = User.query.filter_by(login=login, password=password, is_admin=True).first() 
-
-    if user:
-        users = User.query.all()
-        return render_template("admin.html", data=users)
-
-    return render_template("login.html", action_route='/admin')
-
-@app.route('/add_user', methods=["POST"])
-def add_user():
-    login = request.form["login"]
-    password = request.form["password"]
+@app.cli.command("add-user")
+@click.argument("login")
+@click.argument("password")
+def add_user(login, password):
     if User.query.filter_by(login=login).first():
-        return jsonify({"error": "User already exists"}), 409
+        print(f"User {login} already exists")
+        return None
 
     new_user = User(login=login, password=password)
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"msg": "User added succesfully!"}), 201 
+    print("User added succesfully!")
 
-@app.route('/remove_user', methods=["DELETE"])
-def remove_user():
-    data = request.json
-    login = data.get("login")
 
-    print(login)
-
-    user = User.query.filter_by(login=login).first()
+@app.cli.command("rm-user")
+@click.argument("user_id")
+def remove_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
     if user == None:
-        return jsonify({"error": "User not found"}), 404
+        print("User not found")
+        return None 
 
     db.session.delete(user)
     db.session.commit();
 
-    return '', 204
-
+    print(f"User {user_id} removed successfully")
 
 
 if __name__ == "__main__":

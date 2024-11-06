@@ -8,10 +8,11 @@ html {
     font-family: "arial";
     height: 100%;
     width: 100%;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 body {
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +24,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 6vh;
+    padding-top: 10vh;
     gap: 5vh;
 }
 

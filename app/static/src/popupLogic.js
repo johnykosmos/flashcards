@@ -1,5 +1,5 @@
 
-import {activeTab, tabsContent} from "./settingsLogic.js"
+import {activeTab, tabsContent} from "./tabLogic.js"
 
 
 const popup = document.getElementById("popup");
