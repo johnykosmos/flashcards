@@ -8,7 +8,7 @@ const popupContent = popup.querySelector(".popupContent");
 const submitButton = popup.querySelector(".submitButton");
 
 export const PopupType = {
-    addUser: buildAddUserPopup 
+    addCardbase: buildCreateCardbasePopup 
 }
 
 let lastPopupType;
@@ -32,16 +32,39 @@ export function popupInit(){
     });
 }
 
-function createInput(placeholder, name){
+function checkFormValues(){
+    const formValues = popup.querySelectorAll("input, select");
+
+    for(let element of formValues){ 
+        if(!element.value)
+            return 0;
+    }
+    return 1;
+}
+
+function createInput(placeholder, height, width){
     const input = document.createElement("input");
     
     input.type = "text";
     input.autocomplete = "off";
     input.classList.add("popupInput");
     input.placeholder = placeholder;
-    input.name = name;
+    input.name = placeholder.toLowerCase();
+    input.style.width = `${width}vh`;
+    input.style.height = `${height}vh`;
 
     return input;
+}
+
+function createSelect(name, height, width){
+    const select = document.createElement("select");
+
+    select.classList.add("popupSelect");
+    select.name = name;
+    select.style.width = `${width}vh`;
+    select.style.height = `${height}vh`;
+    
+    return select;
 }
 
 function addToDataTable(formData){
@@ -61,6 +84,11 @@ function addToDataTable(formData){
 function submitButtonHandler(callback){
     popupForm.addEventListener("submit", function(event){
         event.preventDefault();
+        if(!checkFormValues()){
+            alert("Form is not fulfilled");
+            return;
+        }
+
         const formData = new FormData(popupForm);
 
         fetch(popupForm.action, {
@@ -69,7 +97,7 @@ function submitButtonHandler(callback){
         })
         .then(response => {
             if(!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
             else if(response.status === 201){
                 callback(formData); 
             }
@@ -85,19 +113,26 @@ function submitButtonHandler(callback){
     });
 }
 
-function buildAddUserPopup(){
-    popupForm.action = "/add_user";
-    
+function buildCreateCardbasePopup(){
+    popupForm.action = "/create_cardbase";
+
+    const selectDiv = document.createElement("div");
+    selectDiv.classList.add("selectPair");
+
     const inputDiv = document.createElement("div");
-    inputDiv.classList.add("inputPair");
 
-    const login = createInput("Login", "login");
-    const password = createInput("Password", "password");
+    const lang1 = createSelect("lang1", 5, 14);
+    const lang2 = createSelect("lang2", 5, 14);
+    const cbName = createInput("Name", 5, 25);
 
-    inputDiv.appendChild(login);
-    inputDiv.appendChild(password);
+    selectDiv.appendChild(lang1);
+    selectDiv.appendChild(lang2);
+    inputDiv.appendChild(cbName);
     
+    popupContent.appendChild(selectDiv);
     popupContent.appendChild(inputDiv);
+
+    submitButton.innerText = "Create";
 
     submitButtonHandler(addToDataTable);
 }
