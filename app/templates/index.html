@@ -43,11 +43,18 @@
             {% include "components/tabs.html" with context %}
         <div class="tabContent" id="tabContent">
             <div class="tab" id="tab1">
+                <div class="dropdownListContainer">
+                    <select class="dropdownList">
+                        {% for base in cardbases %}
+                            <option value="{{ base.name }}"> {{base.name}} </option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="tableContainer">
                     {% include "components/dataTable.html" with context %} 
                 </div>
                 <div class="manageButtonContainer">
-                    <button class="manageButton" id="addButton"> Add Cardbase </button>
+                    <button class="manageButton" id="addCardbaseButton"> Add Cardbase </button>
                 </div>
             </div>
             <div class="tab" id="tab2">tab2</div>

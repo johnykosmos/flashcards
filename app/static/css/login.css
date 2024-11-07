@@ -58,10 +58,6 @@ body {
     background-color: #4285F4;
 }
 
-.loginButton:hover{
+.loginButton:hover, .loginButton:active{
     background-color: #7ba6ed;
-}
-
-.loginButton:active{
-    transform: scale(0.9);
 }

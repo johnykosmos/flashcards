@@ -50,6 +50,14 @@
     gap: 4vh;
 }
 
+.dropdownList{
+    height: 4vh;
+    width: 25vh;
+    color: grey;
+    border: 0.5vh solid lightgrey;
+    border-radius: 1.5vh;
+}
+
 .tableContainer{
     height: 25vh;
     width: 80vw;
@@ -89,7 +97,7 @@
 
 .manageButton{
     height: 6vh;
-    width: 8vh;
+    width: 12vh;
     color: white;
     background-color: #4285F4;
     font-size: 2vh;
