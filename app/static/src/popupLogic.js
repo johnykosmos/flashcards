@@ -6,12 +6,15 @@ const popup = document.getElementById("popup");
 const popupForm = popup.querySelector(".popupForm");
 const popupContent = popup.querySelector(".popupContent");
 const submitButton = popup.querySelector(".submitButton");
+const quitButton = popup.querySelector(".quitButton");
+
 
 export const PopupType = {
     addCardbase: buildCreateCardbasePopup 
 }
 
 let lastPopupType;
+let lastSubmitHandler;
 
 
 export function openPopup(popupType){
@@ -19,17 +22,31 @@ export function openPopup(popupType){
         popupContent.innerHTML = "";
         lastPopupType = popupType;
         popupType();
-        console.log("dupa");
     }
     popup.classList.remove("hide")
     popup.classList.add("show");
 }
 
 export function popupInit(){
-    popup.querySelector(".quitButton").addEventListener("click", () => {
+    quitButton.addEventListener("click", () => {
         popup.classList.add("hide");
         popup.classList.remove("show");
     });
+}
+
+async function getData(action){
+    return fetch(action)
+    .then(response => {
+        if(!response.ok)
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        return response.json();
+    })
+    .then(data => {return data;})
+    .catch(error => {
+        console.error(error);
+        return null;
+    });
+
 }
 
 function checkFormValues(){
@@ -39,6 +56,7 @@ function checkFormValues(){
         if(!element.value)
             return 0;
     }
+
     return 1;
 }
 
@@ -56,15 +74,34 @@ function createInput(placeholder, height, width){
     return input;
 }
 
-function createSelect(name, height, width){
+function createSelect(name, data, height, width){
     const select = document.createElement("select");
 
     select.classList.add("popupSelect");
     select.name = name;
     select.style.width = `${width}vh`;
     select.style.height = `${height}vh`;
+
+    data.forEach((element) => {
+        const option = document.createElement("option");
+        option.value = element.value;
+        option.innerText = element.name;
+        select.appendChild(option); 
+    });
     
     return select;
+}
+
+function addToSelect(formData){
+    const select = tabsContent[activeTab.index].querySelector(".dropdownList");
+    const option = document.createElement("option");
+    const name = formData.get("name");
+
+    option.value = name;
+    option.innerText = name;
+    select.appendChild(option);
+
+    select.value = name;
 }
 
 function addToDataTable(formData){
@@ -81,8 +118,11 @@ function addToDataTable(formData){
     dataTableBody.appendChild(tableRow);
 }
 
-function submitButtonHandler(callback){
-    popupForm.addEventListener("submit", function(event){
+function submitButtonHandler(callback, exit=false){
+    if(lastSubmitHandler)
+        popupForm.removeEventListener("submit", lastSubmitHandler);
+
+    lastSubmitHandler = function(event){
         event.preventDefault();
         if(!checkFormValues()){
             alert("Form is not fulfilled");
@@ -104,16 +144,18 @@ function submitButtonHandler(callback){
             return response.json();
         })
         .then(data => {
-            alert(data.msg);
+            //alert(data.message);
+            if(exit)
+                quitButton.click(); 
         })
         .catch(error => {
             alert(error.message);
         });
-
-    });
+    }
+    popupForm.addEventListener("submit", lastSubmitHandler);
 }
 
-function buildCreateCardbasePopup(){
+async function buildCreateCardbasePopup(){
     popupForm.action = "/create_cardbase";
 
     const selectDiv = document.createElement("div");
@@ -121,8 +163,10 @@ function buildCreateCardbasePopup(){
 
     const inputDiv = document.createElement("div");
 
-    const lang1 = createSelect("lang1", 5, 14);
-    const lang2 = createSelect("lang2", 5, 14);
+    const languages = await getData("/get_language");
+
+    const lang1 = createSelect("lang1", languages, 5, 14);
+    const lang2 = createSelect("lang2", languages, 5, 14);
     const cbName = createInput("Name", 5, 25);
 
     selectDiv.appendChild(lang1);
@@ -134,5 +178,6 @@ function buildCreateCardbasePopup(){
 
     submitButton.innerText = "Create";
 
-    submitButtonHandler(addToDataTable);
+    submitButtonHandler(addToSelect, true);
+
 }
