@@ -1,13 +1,14 @@
 
-from flask import Flask, render_template, request
-from models import db, User
+from flask import Flask
+from models import Languages, db, User
 from routes import main
 import click
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flashcards.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = "ilovecats"
 
 db.init_app(app)
 
@@ -49,6 +50,22 @@ def remove_user(user_id):
 
     print(f"User {user_id} removed successfully")
 
+@app.cli.command("add-lang")
+@click.argument("name")
+@click.argument("acronym")
+def add_language(name, acronym):
+    if Languages.query.filter_by(name=name).first() or Languages.query.filter_by(acronym=acronym).first():
+        print("Language already exists!")
+        return None
+
+    new_lang = Languages(name=name, acronym=acronym)
+      
+    db.session.add(new_lang)
+    db.session.commit()
+
+    print("Language added succesfully!")
+
 
 if __name__ == "__main__":
+    #app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)
