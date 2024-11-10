@@ -1,4 +1,4 @@
-
+import {openPopup, PopupType} from "./popupLogic.js"
 
 const settingsButton = document.getElementById("settingsButton");
 const settingsContainer = document.getElementById("settingsContainer"); 
@@ -7,8 +7,20 @@ const tabContainer = document.getElementById("tabContainer");
 const tabContent = document.getElementById("tabContent");
 export const tabsContent = tabContent.querySelectorAll(".tab");
 
-
 export const activeTab = {};
+
+
+/* --- CARDBASE TAB --- */
+const addCardbaseButton = document.getElementById("addCardbaseButton");
+const removeCardbaseButton = document.getElementById("removeCardbaseButton");
+
+export const cardbaseMngButtons = [
+    {button: addCardbaseButton, 
+        mayInactive: false, eventListener: () => openPopup(PopupType.addCardbase)},
+    {button: removeCardbaseButton, 
+        mayInactive: true, eventListener: () => openPopup(PopupType.rmCardbase)}
+]
+/* -/- CARDBASE TAB -/- */
 
 
 export function handleSettingsSidebar(){
@@ -93,4 +105,34 @@ function removeButtonsInit(){
 
 }
 
+export function mngButtonsInit(mngButtons){
+    const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
+    mngButtons.forEach((element) => {
+        if(!selectedList.value && element.mayInactive){
+            element.button.classList.add("inactive");
+            return;
+        }
+        element.button.addEventListener("click", element.eventListener);
+    });    
+}
 
+export function updateMngButtons(mngButtons){
+    const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
+    if(!selectedList.value){
+        mngButtons.forEach((element) => {
+            if(element.mayInactive){
+                element.button.classList.add("inactive");
+                element.button.removeEventListener("click", element.eventListener); 
+            }
+        });
+    }
+    else{
+        mngButtons.forEach((element) => {
+            if(element.mayInactive){
+                element.button.classList.remove("inactive");
+                element.button.addEventListener("click", element.eventListener); 
+            }
+
+        });
+    }
+}
