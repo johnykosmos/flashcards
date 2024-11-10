@@ -1,4 +1,5 @@
 
+import { postRequest, deleteRequest } from "./requestHandler.js";
 import {activeTab, tabsContent} from "./tabLogic.js"
 
 
@@ -10,7 +11,8 @@ const quitButton = popup.querySelector(".quitButton");
 
 
 export const PopupType = {
-    addCardbase: buildCreateCardbasePopup 
+    addCardbase: buildCreateCardbasePopup,
+    rmCardbase: buildRemoveCardbasePopup
 }
 
 let lastPopupType;
@@ -118,7 +120,7 @@ function addToDataTable(formData){
     dataTableBody.appendChild(tableRow);
 }
 
-function submitButtonHandler(callback, exit=false){
+function submitButtonHandler(request, callback, exit=false){
     if(lastSubmitHandler)
         popupForm.removeEventListener("submit", lastSubmitHandler);
 
@@ -129,34 +131,20 @@ function submitButtonHandler(callback, exit=false){
             return;
         }
 
-        const formData = new FormData(popupForm);
-
-        fetch(popupForm.action, {
-            method: popupForm.method,
-            body: formData
-        })
-        .then(response => {
-            if(!response.ok)
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            else if(response.status === 201){
-                callback(formData); 
-            }
-            return response.json();
-        })
-        .then(data => {
-            //alert(data.message);
-            if(exit)
-                quitButton.click(); 
-        })
-        .catch(error => {
-            alert(error.message);
-        });
+       if(request(popupForm, callback)){
+            const inputs = popupContent.querySelectorAll("select, input"); 
+            inputs.forEach((input) => {
+                input.value = "";
+            });
+            if(exit) quitButton.click(); 
+        } 
     }
     popupForm.addEventListener("submit", lastSubmitHandler);
 }
 
 async function buildCreateCardbasePopup(){
     popupForm.action = "/create_cardbase";
+    popupForm.method = "POST";
 
     const selectDiv = document.createElement("div");
     selectDiv.classList.add("selectPair");
@@ -175,9 +163,33 @@ async function buildCreateCardbasePopup(){
     
     popupContent.appendChild(selectDiv);
     popupContent.appendChild(inputDiv);
-
     submitButton.innerText = "Create";
 
-    submitButtonHandler(addToSelect, true);
-
+    submitButtonHandler(postRequest, addToSelect, true);
 }
+
+function buildRemoveCardbasePopup(){
+    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList"); 
+    if(!selectedCardbase.value){
+        return;
+    }
+
+    popupForm.action = `/delete_cardbase/${selectedCardbase.value}`;
+    popupForm.method = "DELETE";
+
+    const text = document.createElement("div");
+    text.classList.add("popupText");
+    text.innerText = `Are you sure you want to delete "${selectedCardbase.value}" cardbase?`;
+
+    submitButton.innerText = "Yes";
+
+    popupContent.appendChild(text);
+
+    const removeFromSelect = function(){
+        selectedCardbase.remove(selectedCardbase.selectedIndex); 
+        lastPopupType = null;
+    }
+
+    submitButtonHandler(deleteRequest, removeFromSelect, true);
+}
+
