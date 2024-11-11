@@ -51,6 +51,12 @@
     gap: 3vh;
 }
 
+.popupText{
+    color: grey;
+    font-size: 2.5vh;
+    padding: 0 1vh 0 1vh;
+    text-align: center;
+}
 
 .inputPair, .selectPair{
     display: flex;

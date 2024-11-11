@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session
-from models import Cardbase, Languages, db, User
+from models import Cardbase, Cards, Languages, db, User
 
 
 main = Blueprint('main', __name__)
@@ -50,3 +50,33 @@ def create_cardbase():
     db.session.commit()
 
     return jsonify({"message": "Cardbase created successfully."}), 201
+
+@main.route('/delete_cardbase/<name>', methods=["DELETE"])
+def delete_cardbase(name):
+    if 'user_id' not in session:
+        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
+
+    cardbase =  Cardbase.query.filter_by(name=name).first()
+    
+    db.session.delete(cardbase)
+    db.session.commit()
+
+    return jsonify({"message": f"Cardbase {name} deleted succesfully!"})
+
+@main.route('/add_card/<cardbase_name>', methods=["POST"])
+def add_card(cardbase_name):
+    if 'user_id' not in session:
+        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
+    
+    cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
+
+    if not cardbase:
+        return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
+
+    key = request.form["key"]
+    translation = request.form["translation"]
+
+    new_card = Cards(key=key, value=translation, cardbase_id=cardbase.id)
+
+    return jsonify({"message": "Card added successfully."}), 201
+

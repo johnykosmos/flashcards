@@ -13,12 +13,15 @@ export const activeTab = {};
 /* --- CARDBASE TAB --- */
 const addCardbaseButton = document.getElementById("addCardbaseButton");
 const removeCardbaseButton = document.getElementById("removeCardbaseButton");
+const addCardButton = document.getElementById("addCardButton");
 
 export const cardbaseMngButtons = [
     {button: addCardbaseButton, 
         mayInactive: false, eventListener: () => openPopup(PopupType.addCardbase)},
     {button: removeCardbaseButton, 
-        mayInactive: true, eventListener: () => openPopup(PopupType.rmCardbase)}
+        mayInactive: true, eventListener: () => openPopup(PopupType.rmCardbase)},
+    {button: addCardButton,
+        mayInactive: true, eventListener: () => openPopup(PopupType.addCard)}
 ]
 /* -/- CARDBASE TAB -/- */
 

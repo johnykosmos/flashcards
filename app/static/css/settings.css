@@ -92,7 +92,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: row; 
+    flex-direction: column; 
+    gap: 3vh;
+}
+
+.buttonPair{
+    display: flex;
+    flex-direction: row;
+    gap: 4vh;
 }
 
 .manageButton{
@@ -106,6 +113,11 @@
     border-radius: 2vh;
     box-shadow: 0vh 0.5vh 1vh 0.2vh grey;
     cursor: pointer;
+}
+
+.manageButton.inactive{
+    background-color: lightgrey !important;
+    color: grey !important;
 }
 
 .settingsButton:hover{

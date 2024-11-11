@@ -12,7 +12,8 @@ const quitButton = popup.querySelector(".quitButton");
 
 export const PopupType = {
     addCardbase: buildCreateCardbasePopup,
-    rmCardbase: buildRemoveCardbasePopup
+    rmCardbase: buildRemoveCardbasePopup,
+    addCard: buildAddCardPopup
 }
 
 let lastPopupType;
@@ -144,7 +145,6 @@ function submitButtonHandler(request, callback, exit=false){
 
 async function buildCreateCardbasePopup(){
     popupForm.action = "/create_cardbase";
-    popupForm.method = "POST";
 
     const selectDiv = document.createElement("div");
     selectDiv.classList.add("selectPair");
@@ -173,12 +173,8 @@ async function buildCreateCardbasePopup(){
 
 function buildRemoveCardbasePopup(){
     const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList"); 
-    if(!selectedCardbase.value){
-        return;
-    }
 
     popupForm.action = `/delete_cardbase/${selectedCardbase.value}`;
-    popupForm.method = "DELETE";
 
     const text = document.createElement("div");
     text.classList.add("popupText");
@@ -197,3 +193,29 @@ function buildRemoveCardbasePopup(){
     submitButtonHandler(deleteRequest, removeFromSelect, true);
 }
 
+function buildAddCardPopup(){
+    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList"); 
+
+    popupForm.action = `/add_card/${selectedCardbase.value}`;
+
+    const text = document.createElement("div");
+    text.classList.add("popupText");
+    text.innerText = "Please, type in the word and it's translation";
+
+    const inputDiv = document.createElement("div"); 
+    inputDiv.classList.add("inputPair");    
+
+    popupContent.appendChild(text);
+
+    const key = createInput("Key", 5, 12);
+    const translation = createInput("Translation", 5, 12);
+    
+    inputDiv.appendChild(key);
+    inputDiv.appendChild(translation);
+
+    popupContent.appendChild(inputDiv); 
+
+    submitButton.innerText = "Add";
+
+    submitButtonHandler(postRequest, addToDataTable, false);
+}

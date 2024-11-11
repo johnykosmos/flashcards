@@ -54,7 +54,11 @@
                     {% include "components/dataTable.html" with context %} 
                 </div>
                 <div class="manageButtonContainer">
-                    <button class="manageButton" id="addCardbaseButton"> Add Cardbase </button>
+                    <button class="manageButton" id="addCardButton"> Add a Card </button>
+                    <div class="buttonPair">
+                        <button class="manageButton" id="addCardbaseButton"> Add Cardbase </button>
+                        <button class="manageButton" id="removeCardbaseButton" style="background-color: red;"> Delete Cardbase </button>
+                    </div>
                 </div>
             </div>
             <div class="tab" id="tab2">tab2</div>

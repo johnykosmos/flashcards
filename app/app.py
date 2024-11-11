@@ -45,6 +45,10 @@ def remove_user(user_id):
         print("User not found")
         return None 
 
+    for cardbase in user.cardbases:
+        db.session.delete(cardbase)
+
+
     db.session.delete(user)
     db.session.commit();
 
