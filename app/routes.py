@@ -9,7 +9,8 @@ main = Blueprint('main', __name__)
 def get_index():
     if 'user_id' in session:
         user_id = session['user_id']
-        cardbases = Cardbase.query.filter_by(user_id=user_id)
+        cardbases = Cardbase.query.filter_by(user_id=user_id).all()
+
         return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases)        
 
     return render_template("login.html", action_route='/')
@@ -79,4 +80,22 @@ def add_card(cardbase_name):
     new_card = Cards(key=key, value=translation, cardbase_id=cardbase.id)
 
     return jsonify({"message": "Card added successfully."}), 201
+
+@main.route('/get_cards/<cardbase_name>', methods=["GET"])
+def get_cards(cardbase_name):
+    if 'user_id' not in session:
+        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
+
+    cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
+    if not cardbase:
+        return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
+    
+    cards = Cards.query.filter_by(cardbase_id=cardbase.id).all()
+    if len(cards) == 0:
+        return jsonify({"message": f"Cardbase is empty"}), 204 
+
+    cards_data = [{"key": card.key, "translation": card.value} for card in cards]
+    
+    return jsonify({"langInfo": [cardbase.primary_language, cardbase.translation_language],
+                   "cards": cards_data}), 200
 
