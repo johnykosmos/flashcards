@@ -1,4 +1,5 @@
 import {openPopup, PopupType} from "./popupLogic.js"
+import { removeDataRequest } from "./requestHandler.js";
 
 const settingsButton = document.getElementById("settingsButton");
 const settingsContainer = document.getElementById("settingsContainer"); 
@@ -58,50 +59,25 @@ export function tabsInit(){
             });
             }
     });
-    
-    removeButtonsInit();
+}
+
+export function cardbaseTabInit(data){
+    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList");
+
+    removeButtonsInit(`/remove_card/${selectedCardbase.value}/`);
 }
 
 function removeButtonHandler(event, action){
     const button = event.target;
     const row = button.closest("tr");
-    const keyHeader = tabsContent[activeTab.index].querySelector("th").textContent.toLowerCase();
+    const key = row.querySelector("td").textContent;
 
-    const header = row.querySelector("td").textContent;
-    console.log(keyHeader, header);
-
-    fetch(action, {
-        method: "DELETE",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({[keyHeader]:header}) 
-    })
-    .then(response => {
-        if(!response.ok) 
-            throw new Error(`Failed to delete that ${header} entry`)
-
-        row.remove();
-    })
-    .catch(error => console.error("Error: ", error));
-
+    removeDataRequest((action + key), () => row.remove());
 }
 
-function removeButtonsInit(){
+function removeButtonsInit(action){
     const buttons = tabsContent[activeTab.index].querySelectorAll(".removeButton");
-    let action;
 
-    switch(activeTab.index){
-        case 0:
-            action = "/remove_user"; 
-            break;
-        case 1:
-            action = "/remove_card"; 
-            break;
-    }
-    
-    console.log(action);
-    
     buttons.forEach((button) => {
         button.addEventListener("click", (event) => removeButtonHandler(event, action));
     }); 

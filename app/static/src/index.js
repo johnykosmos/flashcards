@@ -1,7 +1,6 @@
-import {handleCardLogic, cardsInit, fetchCardBase} from "./cardLogic.js"
+import {handleCardLogic, cardsInit, loadCardBase} from "./cardLogic.js"
 import {handleSettingsSidebar, tabsInit, mngButtonsInit, cardbaseMngButtons} from "./tabLogic.js"
 import {popupInit} from "./popupLogic.js"
-
 
 
 
@@ -16,7 +15,7 @@ function initMain(){
 async function main(){
     localStorage.clear();
 
-    await fetchCardBase("/static/cardsTest/test.json");
+    await loadCardBase("/get_cards/dsada");
     
     cardsInit(); 
 

@@ -1,3 +1,4 @@
+import { getDataRequest } from "./requestHandler.js";
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -13,19 +14,20 @@ let hasAnimationStarted = false;
 
 
 function setLocalConfig(data){
-    localStorage.setItem("langInfo", JSON.stringify(data.lang));
+    localStorage.setItem("langInfo", JSON.stringify(data.langInfo));
     localStorage.setItem("cards", JSON.stringify(data.cards));
+    storedCards = JSON.parse(localStorage.getItem("cards"));
+
+    const key = getCardKey();
+    console.log(storedCards[key][0]);
+    frontWord.innerText = storedCards[key][0];
+    backWord.innerText = storedCards[key][1];
 }
 
-export async function fetchCardBase(cardBaseName){
-    try{
-        const response = await fetch(cardBaseName);
-        const data = await response.json();
+export async function loadCardBase(action){
+    const data = await getDataRequest(action);
+    if(data) 
         setLocalConfig(data);      
-    }
-    catch(error){
-        console.error("Couldn't fetch the card base! ", error);
-    }
 }
 
 function animateCard(animation, time){
@@ -80,11 +82,7 @@ function getCardKey(){
 }
 
 export function cardsInit(){
-    storedCards = JSON.parse(localStorage.getItem("cards"));
-    const key = getCardKey();
-    console.log(storedCards[key][0]);
-    frontWord.innerText = storedCards[key][0];
-    backWord.innerText = storedCards[key][1];
+    
 }
 
 function getNextCard(){

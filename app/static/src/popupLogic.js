@@ -1,5 +1,5 @@
 
-import { postRequest, deleteRequest } from "./requestHandler.js";
+import { formPostRequest, formDeleteRequest } from "./requestHandler.js";
 import {activeTab, tabsContent, updateMngButtons, cardbaseMngButtons} from "./tabLogic.js"
 
 
@@ -165,7 +165,7 @@ async function buildCreateCardbasePopup(){
     popupContent.appendChild(inputDiv);
     submitButton.innerText = "Create";
 
-    submitButtonHandler(postRequest, function(formData){
+    submitButtonHandler(formPostRequest, function(formData){
         addToSelect(formData);
         updateMngButtons(cardbaseMngButtons);
     }, true);
@@ -190,7 +190,7 @@ function buildRemoveCardbasePopup(){
         updateMngButtons(cardbaseMngButtons);
     }
 
-    submitButtonHandler(deleteRequest, removeFromSelect, true);
+    submitButtonHandler(formDeleteRequest, removeFromSelect, true);
 }
 
 function buildAddCardPopup(){
@@ -217,5 +217,5 @@ function buildAddCardPopup(){
 
     submitButton.innerText = "Add";
 
-    submitButtonHandler(postRequest, addToDataTable, false);
+    submitButtonHandler(formPostRequest, addToDataTable, false);
 }
