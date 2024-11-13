@@ -19,9 +19,9 @@ function setLocalConfig(data){
     storedCards = data.cards;
 
     const key = getCardKey();
-    console.log(storedCards[key][0]);
-    frontWord.innerText = storedCards[key][0];
-    backWord.innerText = storedCards[key][1];
+    console.log(storedCards);
+    frontWord.innerText = storedCards[key].key;
+    backWord.innerText = storedCards[key].translation;
 }
 
 export async function loadCardBase(action){
@@ -91,8 +91,8 @@ export async function cardsInit(){
 
 function getNextCard(){
     const key = getCardKey();
-    const newWord = storedCards[key][0];
-    const newTranslation = storedCards[key][1];
+    const newWord = storedCards[key].key;
+    const newTranslation = storedCards[key].translation;
     hasAnimationStarted = true;
     cardInput.blur();
     cardInput.disabled = true;

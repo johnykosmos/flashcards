@@ -1,11 +1,12 @@
 
 
 export function formPostRequest(form, callback){
+
     const formData = new FormData(form);
 
     fetch(form.action, {
             method: "POST",
-            body: formData
+            body: formData 
         })
         .then(response => {
             if(!response.ok)
@@ -15,7 +16,7 @@ export function formPostRequest(form, callback){
             }
             return response.json();
         })
-        .then(data => {
+        .then(responseData => {
             //alert(data.message);
         })
         .catch(error => {

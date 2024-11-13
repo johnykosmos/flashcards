@@ -1,5 +1,5 @@
-import {handleCardLogic, cardsInit, loadCardBase} from "./cardLogic.js"
-import {handleSettingsSidebar, tabsInit, mngButtonsInit, cardbaseMngButtons} from "./tabLogic.js"
+import {handleCardLogic, cardsInit} from "./cardLogic.js"
+import {handleSettingsSidebar, indexTabs, tabsInit, updateMngButtons} from "./tabLogic.js"
 import {popupInit} from "./popupLogic.js"
 
 
@@ -7,7 +7,7 @@ import {popupInit} from "./popupLogic.js"
 
 function initMain(){
     tabsInit();
-    mngButtonsInit(cardbaseMngButtons);
+    updateMngButtons(indexTabs.cardbaseTab.mngButtons);
     popupInit();
     handleSettingsSidebar();
 }

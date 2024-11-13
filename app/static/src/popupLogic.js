@@ -1,6 +1,6 @@
 
-import { formPostRequest, formDeleteRequest } from "./requestHandler.js";
-import {activeTab, tabsContent, updateMngButtons, cardbaseMngButtons, addToDataTable} from "./tabLogic.js"
+import { formPostRequest, formDeleteRequest, getDataRequest } from "./requestHandler.js";
+import {updateMngButtons, addToDataTable, indexTabs} from "./tabLogic.js"
 
 
 const popup = document.getElementById("popup");
@@ -35,21 +35,6 @@ export function popupInit(){
         popup.classList.add("hide");
         popup.classList.remove("show");
     });
-}
-
-async function getData(action){
-    return fetch(action)
-    .then(response => {
-        if(!response.ok)
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        return response.json();
-    })
-    .then(data => {return data;})
-    .catch(error => {
-        console.error(error);
-        return null;
-    });
-
 }
 
 function checkFormValues(){
@@ -95,8 +80,8 @@ function createSelect(name, data, height, width){
     return select;
 }
 
-function addToSelect(formData){
-    const select = tabsContent[activeTab.index].querySelector(".dropdownList");
+function addToSelect(formData, tab){
+    const select = tab.querySelector(".dropdownList");
     const option = document.createElement("option");
     const name = formData.get("name");
 
@@ -137,7 +122,7 @@ async function buildCreateCardbasePopup(){
 
     const inputDiv = document.createElement("div");
 
-    const languages = await getData("/get_language");
+    const languages = await getDataRequest("/get_language");
 
     const lang1 = createSelect("lang1", languages, 5, 14);
     const lang2 = createSelect("lang2", languages, 5, 14);
@@ -152,13 +137,13 @@ async function buildCreateCardbasePopup(){
     submitButton.innerText = "Create";
 
     submitButtonHandler(formPostRequest, function(formData){
-        addToSelect(formData);
-        updateMngButtons(cardbaseMngButtons);
+        addToSelect(formData, indexTabs.cardbaseTab.element);
+        updateMngButtons(indexTabs.cardbaseTab.mngButtons);
     }, true);
 }
 
 function buildRemoveCardbasePopup(){
-    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList"); 
+    const selectedCardbase = indexTabs.cardbaseTab.element.querySelector(".dropdownList"); 
 
     popupForm.action = `/delete_cardbase/${selectedCardbase.value}`;
 
@@ -173,15 +158,14 @@ function buildRemoveCardbasePopup(){
     const removeFromSelect = function(){
         selectedCardbase.remove(selectedCardbase.selectedIndex); 
         lastPopupType = null;
-        updateMngButtons(cardbaseMngButtons);
+        updateMngButtons(indexTabs.cardbaseTab.mngButtons);
     }
 
     submitButtonHandler(formDeleteRequest, removeFromSelect, true);
 }
 
 function buildAddCardPopup(){
-    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList"); 
-
+    const selectedCardbase = indexTabs.cardbaseTab.element.querySelector(".dropdownList"); 
     popupForm.action = `/add_card/${selectedCardbase.value}`;
 
     const text = document.createElement("div");
@@ -203,7 +187,7 @@ function buildAddCardPopup(){
 
     submitButton.innerText = "Add";
 
-    submitButtonHandler(formPostRequest, (formData) => {
-        addToDataTable(formData.entries(), `/delete_card/${selectedCardbase.value}/`);
+    submitButtonHandler(formPostRequest, (data) => {
+        addToDataTable(data.entries(), `/delete_card/${selectedCardbase.value}/`);
     }, false);
 }

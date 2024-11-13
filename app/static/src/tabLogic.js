@@ -1,5 +1,5 @@
 import {openPopup, PopupType} from "./popupLogic.js"
-import { removeDataRequest } from "./requestHandler.js";
+import { getDataRequest, removeDataRequest } from "./requestHandler.js";
 
 const settingsButton = document.getElementById("settingsButton");
 const settingsContainer = document.getElementById("settingsContainer"); 
@@ -7,16 +7,14 @@ const closeButton = document.getElementById("closeButton");
 const tabContainer = document.getElementById("tabContainer");
 const tabContent = document.getElementById("tabContent");
 export const tabsContent = tabContent.querySelectorAll(".tab");
-
-export const activeTab = {};
-
+const cardbaseTabDOM = document.getElementById("cards");
 
 /* --- CARDBASE TAB --- */
 const addCardbaseButton = document.getElementById("addCardbaseButton");
 const removeCardbaseButton = document.getElementById("removeCardbaseButton");
 const addCardButton = document.getElementById("addCardButton");
 
-export const cardbaseMngButtons = [
+const cardbaseMngButtons = [
     {button: addCardbaseButton, 
         mayInactive: false, eventListener: () => openPopup(PopupType.addCardbase)},
     {button: removeCardbaseButton, 
@@ -24,8 +22,14 @@ export const cardbaseMngButtons = [
     {button: addCardButton,
         mayInactive: true, eventListener: () => openPopup(PopupType.addCard)}
 ]
+
+const cardbaseTab = {element: cardbaseTabDOM,
+    mngButtons: cardbaseMngButtons}
+
 /* -/- CARDBASE TAB -/- */
 
+export const activeTab = {};
+export const indexTabs = {cardbaseTab};
 
 export function handleSettingsSidebar(){
     settingsButton.addEventListener("click", () => {
@@ -43,22 +47,26 @@ export function tabsInit(){
 
         tabs.forEach((element, index) => {
             if(element.id !== "closeButton"){
-                if(index === 0){
-                activeTab.tab = element;
-                activeTab.index = index;
-                element.classList.add("active");
-                tabsContent[index].style.visibility = "visible"; 
-            }
+                if(index === 0)
+                    setActiveTab(element, index)          
+
             element.addEventListener("click", function(){
-                activeTab.tab.classList.remove("active");
-                tabsContent[activeTab.index].style.visibility = "hidden";
-                activeTab.tab = this;
-                activeTab.index = index;
-                this.classList.add("active");
-                tabsContent[index].style.visibility = "visible"; 
+                setActiveTab(this, index); 
             });
             }
     });
+}
+
+function setActiveTab(element, index){
+    if(activeTab.tab){
+        activeTab.tab.classList.remove("active");
+        tabsContent[activeTab.index].style.visibility = "hidden";
+    }
+
+    activeTab.tab = element;
+    activeTab.index = index;
+    element.classList.add("active");
+    tabsContent[index].style.visibility = "visible";
 }
 
 export function addToDataTable(data, action){
@@ -95,43 +103,18 @@ export function createRemoveButton(action){
     return button;
 }
 
-function removeButtonsInit(action){
-    const buttons = tabsContent[activeTab.index].querySelectorAll(".removeButton");
-
-    buttons.forEach((button) => {
-        button.addEventListener("click", (event) => removeButtonHandler(event, action));
-    }); 
-
-}
-
-export function mngButtonsInit(mngButtons){
+export function updateMngButtons(mngButtons){
     const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
     mngButtons.forEach((element) => {
         if(!selectedList.value && element.mayInactive){
             element.button.classList.add("inactive");
-            return;
+            element.button.removeEventListener("click", element.eventListener);
         }
-        element.button.addEventListener("click", element.eventListener);
-    });    
+        else{
+            element.button.classList.remove("inactive");
+            element.button.addEventListener("click", element.eventListener);
+        }
+    });
 }
 
-export function updateMngButtons(mngButtons){
-    const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
-    if(!selectedList.value){
-        mngButtons.forEach((element) => {
-            if(element.mayInactive){
-                element.button.classList.add("inactive");
-                element.button.removeEventListener("click", element.eventListener); 
-            }
-        });
-    }
-    else{
-        mngButtons.forEach((element) => {
-            if(element.mayInactive){
-                element.button.classList.remove("inactive");
-                element.button.addEventListener("click", element.eventListener); 
-            }
 
-        });
-    }
-}
