@@ -1,22 +1,17 @@
-import {handleCardLogic, cardsInit} from "./cardLogic.js"
-import {handleSettingsSidebar, indexTabs, tabsInit, updateMngButtons} from "./tabLogic.js"
+import {handleCardLogic} from "./cardLogic.js"
+import {handleSettingsSidebar, tabsInit, updateMngButtons} from "./tabLogic.js"
+import {cardbaseInit} from "./cardbaseTab.js"
 import {popupInit} from "./popupLogic.js"
-
-
 
 
 function initMain(){
     tabsInit();
-    updateMngButtons(indexTabs.cardbaseTab.mngButtons);
+    cardbaseInit();
     popupInit();
     handleSettingsSidebar();
 }
 
 async function main(){
-    localStorage.clear();
-
-    cardsInit(); 
-
     console.log(localStorage);
 
     handleCardLogic(); 

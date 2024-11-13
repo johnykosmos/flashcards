@@ -26,8 +26,11 @@ function setLocalConfig(data){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data && data.cards.length !== 0) 
+    if(data && data.cards.length !== 0){ 
         setLocalConfig(data);      
+        return true;
+    }
+    return false;
 }
 
 function animateCard(animation, time){
@@ -81,12 +84,22 @@ function getCardKey(){
     return key;
 }
 
-export async function cardsInit(){
+export function cardbaseInit(){
+    const select = cardbaseTab.element.querySelector(".dropdownList");
+
     const cardbaseName = localStorage.getItem("cardbase"); 
-    if(cardbaseName){
-        const action = "/get_cards/" + cardbaseName; 
-        await loadCardBase(action)
-    }
+    if(cardbaseName)
+        loadCardbaseToTable(cardbaseName);
+
+    select.addEventListener("change", function(){
+        if(!this.value) return;
+
+        const tableBody = cardbaseTab.element.querySelector("tbody"); 
+        tableBody.innerHTML = "";
+
+        loadCardbaseToTable(this.value);
+    });
+    updateMngButtons(cardbaseTab.mngButtons); 
 }
 
 function getNextCard(){
