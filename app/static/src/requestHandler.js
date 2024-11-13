@@ -56,8 +56,6 @@ export async function getDataRequest(action){
         const response = await fetch(action);
         if(!response.ok)
             throw new Error(`Error ${response.status}: ${response.statusText}`);
-        else if(response.status)
-            return null
 
         const data = await response.json();
         return data;

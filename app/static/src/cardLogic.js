@@ -16,7 +16,7 @@ let hasAnimationStarted = false;
 function setLocalConfig(data){
     localStorage.setItem("langInfo", JSON.stringify(data.langInfo));
     localStorage.setItem("cards", JSON.stringify(data.cards));
-    storedCards = JSON.parse(localStorage.getItem("cards"));
+    storedCards = data.cards;
 
     const key = getCardKey();
     console.log(storedCards[key][0]);
@@ -26,7 +26,7 @@ function setLocalConfig(data){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data) 
+    if(data && data.cards.length !== 0) 
         setLocalConfig(data);      
 }
 
@@ -81,8 +81,12 @@ function getCardKey(){
     return key;
 }
 
-export function cardsInit(){
-    
+export async function cardsInit(){
+    const cardbaseName = localStorage.getItem("cardbase"); 
+    if(cardbaseName){
+        const action = "/get_cards/" + cardbaseName; 
+        await loadCardBase(action)
+    }
 }
 
 function getNextCard(){

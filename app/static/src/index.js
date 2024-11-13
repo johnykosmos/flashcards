@@ -15,8 +15,6 @@ function initMain(){
 async function main(){
     localStorage.clear();
 
-    await loadCardBase("/get_cards/dsada");
-    
     cardsInit(); 
 
     console.log(localStorage);
