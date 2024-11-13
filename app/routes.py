@@ -53,16 +53,19 @@ def create_cardbase():
     return jsonify({"message": "Cardbase created successfully."}), 201
 
 @main.route('/delete_cardbase/<name>', methods=["DELETE"])
-def delete_cardbase(name):
+def delete_cardbase(cardbase_name):
     if 'user_id' not in session:
         return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
 
-    cardbase =  Cardbase.query.filter_by(name=name).first()
+    cardbase =  Cardbase.query.filter_by(name=cardbase_name).first()
     
+    if not cardbase:
+        return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
+
     db.session.delete(cardbase)
     db.session.commit()
 
-    return jsonify({"message": f"Cardbase {name} deleted succesfully!"})
+    return jsonify({"message": f"Cardbase {cardbase_name} deleted succesfully!"}), 200
 
 @main.route('/add_card/<cardbase_name>', methods=["POST"])
 def add_card(cardbase_name):
@@ -78,6 +81,9 @@ def add_card(cardbase_name):
     translation = request.form["translation"]
 
     new_card = Cards(key=key, value=translation, cardbase_id=cardbase.id)
+
+    db.session.add(new_card)
+    db.session.commit()
 
     return jsonify({"message": "Card added successfully."}), 201
 
@@ -96,3 +102,22 @@ def get_cards(cardbase_name):
     return jsonify({"langInfo": [cardbase.primary_language, cardbase.translation_language],
                    "cards": cards_data}), 200
 
+@main.route('/delete_card/<cardbase_name>/<card_name>', methods=["DELETE"])
+def delete_card(cardbase_name, card_name):
+    if 'user_id' not in session:
+        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
+
+    cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
+
+    if not cardbase:
+        return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
+
+    card = Cards.query.filter_by(key=card_name, cardbase_id=cardbase.id).first()
+
+    if not card:
+        return jsonify({"message": f"No card like that"}), 404
+
+    db.session.delete(card)
+    db.session.commit() 
+
+    return jsonify({"message": f"Card {card_name} deleted succesfully!"}), 200

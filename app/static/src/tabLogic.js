@@ -61,10 +61,21 @@ export function tabsInit(){
     });
 }
 
-export function cardbaseTabInit(data){
-    const selectedCardbase = tabsContent[activeTab.index].querySelector(".dropdownList");
-
-    removeButtonsInit(`/remove_card/${selectedCardbase.value}/`);
+export function addToDataTable(data, action){
+    const dataTableBody = tabsContent[activeTab.index]
+        .querySelector(".dataTable").querySelector("tbody");
+    
+    const tableRow = document.createElement("tr");
+    for(let [key, value] of data){
+        const tableCell = document.createElement("td"); 
+        tableCell.innerText = value;
+        tableRow.appendChild(tableCell); 
+    }
+    const button = createRemoveButton(action);
+    const tableCell = document.createElement("td");
+    tableCell.appendChild(button);
+    tableRow.appendChild(tableCell);
+    dataTableBody.appendChild(tableRow);
 }
 
 function removeButtonHandler(event, action){
@@ -73,6 +84,15 @@ function removeButtonHandler(event, action){
     const key = row.querySelector("td").textContent;
 
     removeDataRequest((action + key), () => row.remove());
+}
+
+export function createRemoveButton(action){
+    const button = document.createElement("button");
+    button.innerText = "X";
+    button.classList.add("removeButton");
+    button.addEventListener("click", (event) => removeButtonHandler(event, action));
+
+    return button;
 }
 
 function removeButtonsInit(action){

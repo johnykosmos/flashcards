@@ -7,15 +7,15 @@ const backWord = document.getElementById("backWord");
 const cardInput = document.getElementById("cardInput");
 const showNext = document.getElementById("showNext");
 
-let storedCards = [];
+export let storedCards = [];
+let langInfo;
 let lastKey = 0;
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
 
 
 function setLocalConfig(data){
-    localStorage.setItem("langInfo", JSON.stringify(data.langInfo));
-    localStorage.setItem("cards", JSON.stringify(data.cards));
+    langInfo = data.langInfo;
     storedCards = data.cards;
 
     const key = getCardKey();
@@ -105,7 +105,8 @@ function getNextCard(){
 
 export function handleCardLogic(){
     cardInput.addEventListener("keydown", (event) => {
-        if(event.key === "Enter" && !hasAnimationStarted){
+        if(storedCards.length !== 0 && 
+            event.key === "Enter" && !hasAnimationStarted){
             if(backWord.innerText === cardInput.value){
                 animateCard("goodAnswer", 1000); 
                 setTimeout(() => getNextCard(), 1000);

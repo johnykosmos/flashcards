@@ -1,6 +1,6 @@
 
 import { formPostRequest, formDeleteRequest } from "./requestHandler.js";
-import {activeTab, tabsContent, updateMngButtons, cardbaseMngButtons} from "./tabLogic.js"
+import {activeTab, tabsContent, updateMngButtons, cardbaseMngButtons, addToDataTable} from "./tabLogic.js"
 
 
 const popup = document.getElementById("popup");
@@ -107,20 +107,6 @@ function addToSelect(formData){
     select.value = name;
 }
 
-function addToDataTable(formData){
-    const dataTableBody = tabsContent[activeTab.index]
-        .querySelector(".dataTable").querySelector("tbody");
-    
-    const tableRow = document.createElement("tr");
-    for(let [key, value] of formData.entries()){
-        const tableCell = document.createElement("td"); 
-        tableCell.innerText = value;
-        tableRow.appendChild(tableCell); 
-    }
-
-    dataTableBody.appendChild(tableRow);
-}
-
 function submitButtonHandler(request, callback, exit=false){
     if(lastSubmitHandler)
         popupForm.removeEventListener("submit", lastSubmitHandler);
@@ -217,5 +203,7 @@ function buildAddCardPopup(){
 
     submitButton.innerText = "Add";
 
-    submitButtonHandler(formPostRequest, addToDataTable, false);
+    submitButtonHandler(formPostRequest, (formData) => {
+        addToDataTable(formData.entries(), `/delete_card/${selectedCardbase.value}/`);
+    }, false);
 }
