@@ -1,5 +1,4 @@
-import {openPopup, PopupType} from "./popupLogic.js"
-import { getDataRequest, removeDataRequest } from "./requestHandler.js";
+import {getDataRequest, removeDataRequest } from "./requestHandler.js";
 
 const settingsButton = document.getElementById("settingsButton");
 const settingsContainer = document.getElementById("settingsContainer"); 
@@ -7,29 +6,9 @@ const closeButton = document.getElementById("closeButton");
 const tabContainer = document.getElementById("tabContainer");
 const tabContent = document.getElementById("tabContent");
 export const tabsContent = tabContent.querySelectorAll(".tab");
-const cardbaseTabDOM = document.getElementById("cards");
-
-/* --- CARDBASE TAB --- */
-const addCardbaseButton = document.getElementById("addCardbaseButton");
-const removeCardbaseButton = document.getElementById("removeCardbaseButton");
-const addCardButton = document.getElementById("addCardButton");
-
-const cardbaseMngButtons = [
-    {button: addCardbaseButton, 
-        mayInactive: false, eventListener: () => openPopup(PopupType.addCardbase)},
-    {button: removeCardbaseButton, 
-        mayInactive: true, eventListener: () => openPopup(PopupType.rmCardbase)},
-    {button: addCardButton,
-        mayInactive: true, eventListener: () => openPopup(PopupType.addCard)}
-]
-
-const cardbaseTab = {element: cardbaseTabDOM,
-    mngButtons: cardbaseMngButtons}
-
-/* -/- CARDBASE TAB -/- */
 
 export const activeTab = {};
-export const indexTabs = {cardbaseTab};
+
 
 export function handleSettingsSidebar(){
     settingsButton.addEventListener("click", () => {
@@ -73,8 +52,10 @@ export function addToDataTable(data, action){
     const dataTableBody = tabsContent[activeTab.index]
         .querySelector(".dataTable").querySelector("tbody");
     
+    const entries = Array.isArray(data) ? data : Object.entries(data);
+
     const tableRow = document.createElement("tr");
-    for(let [key, value] of data){
+    for(let [key, value] of entries){
         const tableCell = document.createElement("td"); 
         tableCell.innerText = value;
         tableRow.appendChild(tableCell); 
