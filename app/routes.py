@@ -91,10 +91,7 @@ def get_cards(cardbase_name):
         return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
     
     cards = Cards.query.filter_by(cardbase_id=cardbase.id).all()
-    if len(cards) == 0:
-        return jsonify({"message": f"Cardbase is empty"}), 204 
-
-    cards_data = [{"key": card.key, "translation": card.value} for card in cards]
+    cards_data = [[card.key, card.value] for card in cards] if cards else []
     
     return jsonify({"langInfo": [cardbase.primary_language, cardbase.translation_language],
                    "cards": cards_data}), 200
