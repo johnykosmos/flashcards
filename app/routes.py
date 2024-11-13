@@ -52,15 +52,19 @@ def create_cardbase():
 
     return jsonify({"message": "Cardbase created successfully."}), 201
 
-@main.route('/delete_cardbase/<name>', methods=["DELETE"])
+@main.route('/delete_cardbase/<cardbase_name>', methods=["DELETE"])
 def delete_cardbase(cardbase_name):
     if 'user_id' not in session:
         return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
 
-    cardbase =  Cardbase.query.filter_by(name=cardbase_name).first()
+    cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
     
     if not cardbase:
         return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
+
+    cards_to_delete = Cards.query.filter_by(cardbase_id=cardbase.id).all()
+    for card in cards_to_delete:
+        db.session.delete(card)
 
     db.session.delete(cardbase)
     db.session.commit()
@@ -97,7 +101,7 @@ def get_cards(cardbase_name):
         return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
     
     cards = Cards.query.filter_by(cardbase_id=cardbase.id).all()
-    cards_data = [[card.key, card.value] for card in cards] if cards else []
+    cards_data = [{"key" : card.key, "translation" : card.value} for card in cards] if cards else []
     
     return jsonify({"langInfo": [cardbase.primary_language, cardbase.translation_language],
                    "cards": cards_data}), 200
