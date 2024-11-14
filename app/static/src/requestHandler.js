@@ -27,6 +27,7 @@ export function formPostRequest(form, callback){
 }
 
 export function formDeleteRequest(form, callback){
+
     const formData = new FormData(form);
 
     fetch(form.action, {

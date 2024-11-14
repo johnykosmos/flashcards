@@ -81,10 +81,10 @@ function createSelect(name, data, height, width){
     return select;
 }
 
-function addToSelect(formData, tab){
+function addToSelect(dataName, tab){
     const select = tab.querySelector(".dropdownList");
     const option = document.createElement("option");
-    const name = formData.get("name");
+    const name = dataName;
 
     option.value = name;
     option.innerText = name;
@@ -112,6 +112,7 @@ function submitButtonHandler(request, callback, exit=false){
             if(exit) quitButton.click(); 
         } 
     }
+
     popupForm.addEventListener("submit", lastSubmitHandler);
 }
 
@@ -138,7 +139,7 @@ async function buildCreateCardbasePopup(){
     submitButton.innerText = "Create";
 
     submitButtonHandler(formPostRequest, function(formData){
-        addToSelect(formData, cardbaseTab.element);
+        addToSelect(formData.get("name"), cardbaseTab.element);
         updateMngButtons(cardbaseTab.mngButtons);
     }, true);
 }
@@ -189,6 +190,6 @@ function buildAddCardPopup(){
     submitButton.innerText = "Add";
 
     submitButtonHandler(formPostRequest, (data) => {
-        addToDataTable(data.entries(), `/delete_card/${selectedCardbase.value}/`);
+        addToDataTable(Array.from(data.entries()), `/delete_card/${selectedCardbase.value}/`);
     }, false);
 }
