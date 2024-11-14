@@ -24,10 +24,12 @@ export function cardbaseInit(){
     const select = cardbaseTab.element.querySelector(".dropdownList");
 
     const cardbaseName = localStorage.getItem("cardbase"); 
-    if(cardbaseName)
+    if(cardbaseName){
         loadCardbaseToTable(cardbaseName);
+        select.value = cardbaseName;
+    }
 
-    select.addEventListener("change", function(){
+    select.addEventListener("input", function(){
         if(!this.value) return;
 
         const tableBody = cardbaseTab.element.querySelector("tbody"); 
@@ -42,6 +44,6 @@ export function cardbaseInit(){
 async function loadCardbaseToTable(cardbaseName){
     const cardsLoaded = await loadCardBase(`/get_cards/${cardbaseName}`);
         if(cardsLoaded){
-            storedCards.forEach((card) => addToDataTable(card));
+            storedCards.forEach((card) => addToDataTable(card, `/delete_card/${cardbaseName}/`));
         }
 }

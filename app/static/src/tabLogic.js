@@ -52,7 +52,6 @@ export function addToDataTable(data, action){
     const dataTableBody = tabsContent[activeTab.index]
         .querySelector(".dataTable").querySelector("tbody");
     
-    console.log(data);
     const entries = Array.isArray(data) ? data : Object.entries(data);
 
     const tableRow = document.createElement("tr");

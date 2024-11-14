@@ -2,6 +2,7 @@
 import { formPostRequest, formDeleteRequest, getDataRequest } from "./requestHandler.js";
 import {updateMngButtons, addToDataTable} from "./tabLogic.js"
 import {cardbaseTab} from "./cardbaseTab.js"
+import { setCards, storedCards } from "./cardLogic.js";
 
 
 const popup = document.getElementById("popup");
@@ -140,6 +141,8 @@ async function buildCreateCardbasePopup(){
 
     submitButtonHandler(formPostRequest, function(formData){
         addToSelect(formData.get("name"), cardbaseTab.element);
+        const selectedCardbase = cardbaseTab.element.querySelector(".dropdownList");
+        selectedCardbase.dispatchEvent(new Event("input"));
         updateMngButtons(cardbaseTab.mngButtons);
     }, true);
 }
@@ -158,7 +161,10 @@ function buildRemoveCardbasePopup(){
     popupContent.appendChild(text);
 
     const removeFromSelect = function(){
+        const cardsList = cardbaseTab.element.querySelector(".dataTable").querySelector("tbody");
+        cardsList.innerHTML = "";
         selectedCardbase.remove(selectedCardbase.selectedIndex); 
+        selectedCardbase.dispatchEvent(new Event("input"));
         lastPopupType = null;
         updateMngButtons(cardbaseTab.mngButtons);
     }
@@ -190,6 +196,9 @@ function buildAddCardPopup(){
     submitButton.innerText = "Add";
 
     submitButtonHandler(formPostRequest, (data) => {
-        addToDataTable(Array.from(data.entries()), `/delete_card/${selectedCardbase.value}/`);
+        const card_data = Array.from(data.entries());
+        addToDataTable(card_data, `/delete_card/${selectedCardbase.value}/`);
+        storedCards.push({key : card_data[0][1], translation : card_data[1][1]});
+        setCards();
     }, false);
 }

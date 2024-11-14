@@ -12,7 +12,6 @@ function initMain(){
 }
 
 async function main(){
-    //localStorage.clear();
     console.log(localStorage);
 
     initMain();

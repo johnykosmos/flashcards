@@ -9,7 +9,7 @@ const showNext = document.getElementById("showNext");
 
 export let storedCards = [];
 let langInfo;
-let lastKey = 0;
+let lastKey = -1; // offset to draw the first card for sure
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
 
@@ -17,9 +17,12 @@ let hasAnimationStarted = false;
 function setLocalConfig(data){
     langInfo = data.langInfo;
     storedCards = data.cards;
+    lastKey = -1;
+    setCards();    
+}
 
+export function setCards(){
     const key = getCardKey();
-    console.log(storedCards);
     frontWord.innerText = storedCards[key].key;
     backWord.innerText = storedCards[key].translation;
 }
@@ -30,6 +33,9 @@ export async function loadCardBase(action){
         setLocalConfig(data);      
         return true;
     }
+    storedCards = [];
+    frontWord.innerText = "";
+    backWord.innerText = "";
     return false;
 }
 
@@ -79,27 +85,10 @@ function getCardKey(){
         key = Math.floor(Math.random() * storedCards.length);
     }while(key === lastKey);
 
-    lastKey = key;
+    if(storedCards.length - 1 !== 0)
+        lastKey = key;
 
     return key;
-}
-
-export function cardbaseInit(){
-    const select = cardbaseTab.element.querySelector(".dropdownList");
-
-    const cardbaseName = localStorage.getItem("cardbase"); 
-    if(cardbaseName)
-        loadCardbaseToTable(cardbaseName);
-
-    select.addEventListener("change", function(){
-        if(!this.value) return;
-
-        const tableBody = cardbaseTab.element.querySelector("tbody"); 
-        tableBody.innerHTML = "";
-
-        loadCardbaseToTable(this.value);
-    });
-    updateMngButtons(cardbaseTab.mngButtons); 
 }
 
 function getNextCard(){
