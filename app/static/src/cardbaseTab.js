@@ -21,6 +21,8 @@ export const cardbaseTab = {element: cardbaseTabDOM,
     mngButtons: cardbaseMngButtons}
 
 export function cardbaseInit(){
+    window.speechSynthesis.getVoices();
+
     const select = cardbaseTab.element.querySelector(".dropdownList");
 
     const cardbaseName = localStorage.getItem("cardbase"); 

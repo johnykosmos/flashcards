@@ -17,10 +17,12 @@ let lastKey = -1; // offset to draw the first card for sure
 let lastPlayedLang;
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
+let voicesLoaded = false;
 
 
 function speakText(text, language){
     synth.cancel();
+
     const utterance = new SpeechSynthesisUtterance(text);
     if(language !== lastPlayedLang){
         const voices = synth.getVoices();
@@ -49,10 +51,11 @@ function setLangOrder(front, back){
 function setLocalConfig(data){
     langInfo.key = data.langInfo.key;
     langInfo.translation = data.langInfo.translation;
-    console.log(langInfo);
-    storedCards = data.cards;
-    lastKey = -1;
-    setCards();    
+    if(data.cards.length !== 0){
+        storedCards = data.cards;
+        lastKey = -1;
+        setCards();    
+    }
 }
 
 export function setCards(){
@@ -82,7 +85,7 @@ export function popCard(card){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data && data.cards.length !== 0){ 
+    if(data){ 
         setLocalConfig(data);      
         return true;
     }
@@ -162,7 +165,6 @@ function getNextCard(){
         startCardFlip(newTranslation, newWord);
         setLangOrder(langInfo.translation, langInfo.key);
     }
-
 }
 
 export function handleCardLogic(){
