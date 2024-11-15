@@ -1,4 +1,4 @@
-import { loadCardBase, storedCards } from "./cardLogic.js";
+import { loadCardBase, storedCards, popCard } from "./cardLogic.js";
 import {openPopup, PopupType} from "./popupLogic.js"
 import {updateMngButtons, addToDataTable} from "./tabLogic.js";
 
@@ -37,13 +37,14 @@ export function cardbaseInit(){
 
         loadCardbaseToTable(this.value);
         localStorage.setItem("cardbase", this.value);
+        updateMngButtons(cardbaseTab.mngButtons);
     });
+
     updateMngButtons(cardbaseTab.mngButtons); 
 }
 
 async function loadCardbaseToTable(cardbaseName){
     const cardsLoaded = await loadCardBase(`/get_cards/${cardbaseName}`);
         if(cardsLoaded){
-            storedCards.forEach((card) => addToDataTable(card, `/delete_card/${cardbaseName}/`));
-        }
+            storedCards.forEach((card) => addToDataTable(card, `/delete_card/${cardbaseName}/`, () => popCard(card)));        }
 }

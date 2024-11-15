@@ -48,7 +48,7 @@ function setActiveTab(element, index){
     tabsContent[index].style.visibility = "visible";
 }
 
-export function addToDataTable(data, action){
+export function addToDataTable(data, action, callback){
     const dataTableBody = tabsContent[activeTab.index]
         .querySelector(".dataTable").querySelector("tbody");
     
@@ -60,26 +60,29 @@ export function addToDataTable(data, action){
         tableCell.innerText = value;
         tableRow.appendChild(tableCell); 
     }
-    const button = createRemoveButton(action);
+    const button = createRemoveButton(action, callback);
     const tableCell = document.createElement("td");
     tableCell.appendChild(button);
     tableRow.appendChild(tableCell);
     dataTableBody.appendChild(tableRow);
 }
 
-function removeButtonHandler(event, action){
+function removeButtonHandler(event, action, callback){
     const button = event.target;
     const row = button.closest("tr");
     const key = row.querySelector("td").textContent;
 
-    removeDataRequest((action + key), () => row.remove());
+    removeDataRequest((action + key), () => {
+        callback();
+        row.remove();
+    });
 }
 
-export function createRemoveButton(action){
+export function createRemoveButton(action, callback){
     const button = document.createElement("button");
     button.innerText = "X";
     button.classList.add("removeButton");
-    button.addEventListener("click", (event) => removeButtonHandler(event, action));
+    button.addEventListener("click", (event) => removeButtonHandler(event, action, callback));
 
     return button;
 }

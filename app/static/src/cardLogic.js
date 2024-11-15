@@ -69,6 +69,17 @@ export function setCards(){
     }
 }
 
+export function popCard(card){
+    const index = storedCards.indexOf(card);
+    if (index > -1) 
+        storedCards.splice(index, 1);
+
+    if(storedCards.length === 0){
+        frontWord.innerText = "";
+        backWord.innerText = "";
+    }
+}
+
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
     if(data && data.cards.length !== 0){ 
