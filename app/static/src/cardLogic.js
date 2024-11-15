@@ -7,15 +7,48 @@ const backWord = document.getElementById("backWord");
 const cardInput = document.getElementById("cardInput");
 const showNext = document.getElementById("showNext");
 
+const synth = window.speechSynthesis;
+const langInfo = {};
+
 export let storedCards = [];
-let langInfo;
+let currentLangOrder = [];
 let lastKey = -1; // offset to draw the first card for sure
+let lastPlayedLang;
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
 
 
+function speakText(text, language){
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    if(language !== lastPlayedLang){
+        const voices = synth.getVoices();
+        const selectedVoice = voices.find(voice => voice.lang === language);
+        utterance.voice = selectedVoice;
+    }
+    utterance.lang = language;
+    synth.speak(utterance);
+}
+
+function handleTTSButtons(){
+    const card = [frontCard, backCard];
+    card.forEach((side, index) => {
+        const ttsButton = side.querySelector(".ttsButton"); 
+        ttsButton.addEventListener("click", () =>{ 
+            speakText(side.innerText, currentLangOrder[index])
+        });
+    });
+}
+
+function setLangOrder(front, back){
+    currentLangOrder[0] = front;
+    currentLangOrder[1] = back;
+}
+
 function setLocalConfig(data){
-    langInfo = data.langInfo;
+    langInfo.key = data.langInfo.key;
+    langInfo.translation = data.langInfo.translation;
+    console.log(langInfo);
     storedCards = data.cards;
     lastKey = -1;
     setCards();    
@@ -23,8 +56,14 @@ function setLocalConfig(data){
 
 export function setCards(){
     const key = getCardKey();
-    frontWord.innerText = storedCards[key].key;
-    backWord.innerText = storedCards[key].translation;
+    if(Math.floor(Math.random() * 2) === 0){
+        frontWord.innerText = storedCards[key].key;
+        backWord.innerText = storedCards[key].translation;
+    }
+    else{
+        frontWord.innerText = storedCards[key].translation;
+        backWord.innerText = storedCards[key].key;
+    }
 }
 
 export async function loadCardBase(action){
@@ -85,7 +124,7 @@ function getCardKey(){
         key = Math.floor(Math.random() * storedCards.length);
     }while(key === lastKey);
 
-    if(storedCards.length - 1 !== 0)
+    if(storedCards.length <= 1)
         lastKey = key;
 
     return key;
@@ -99,13 +138,20 @@ function getNextCard(){
     cardInput.blur();
     cardInput.disabled = true;
 
-    if(Math.floor(Math.random() * 2) === 0)
+    if(Math.floor(Math.random() * 2) === 0){
         startCardFlip(newWord, newTranslation);
-    else
+        setLangOrder(langInfo.key, langInfo.translation);
+    }
+    else{
         startCardFlip(newTranslation, newWord);
+        setLangOrder(langInfo.translation, langInfo.key);
+    }
+
 }
 
 export function handleCardLogic(){
+    handleTTSButtons();
+
     cardInput.addEventListener("keydown", (event) => {
         if(storedCards.length !== 0 && 
             event.key === "Enter" && !hasAnimationStarted){
