@@ -60,10 +60,12 @@ export function setCards(){
     if(Math.floor(Math.random() * 2) === 0){
         frontWord.innerText = storedCards[key].key;
         backWord.innerText = storedCards[key].translation;
+        setLangOrder(langInfo.key, langInfo.translation);
     }
     else{
         frontWord.innerText = storedCards[key].translation;
         backWord.innerText = storedCards[key].key;
+        setLangOrder(langInfo.translation, langInfo.key);
     }
 }
 
