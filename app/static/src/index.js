@@ -4,18 +4,12 @@ import {cardbaseInit} from "./cardbaseTab.js"
 import {popupInit} from "./popupLogic.js"
 
 
-function initMain(){
+async function main(){
+    console.log(localStorage);
     tabsInit();
     cardbaseInit();
     popupInit();
-    handleSettingsSidebar();
-}
-
-async function main(){
-    console.log(localStorage);
-
-    initMain();
-
+    handleSettingsSidebar()
     handleCardLogic(); 
 }
 

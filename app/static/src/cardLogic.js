@@ -1,4 +1,5 @@
 import { getDataRequest } from "./requestHandler.js";
+import { settingsButton } from "./tabLogic.js";
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -112,6 +113,7 @@ function flipCardLeft(newBackWord){
     setTimeout(() => {
         cardInput.value = '';
         cardInput.disabled = false;
+        settingsButton.disabled = false;
         cardInput.focus();
         backWord.innerText = newBackWord;
     }, 2000);
@@ -124,7 +126,7 @@ function getCardKey(){
         key = Math.floor(Math.random() * storedCards.length);
     }while(key === lastKey);
 
-    if(storedCards.length <= 1)
+    if(storedCards.length > 1)
         lastKey = key;
 
     return key;
@@ -137,6 +139,7 @@ function getNextCard(){
     hasAnimationStarted = true;
     cardInput.blur();
     cardInput.disabled = true;
+    settingsButton.disabled = true;
 
     if(Math.floor(Math.random() * 2) === 0){
         startCardFlip(newWord, newTranslation);

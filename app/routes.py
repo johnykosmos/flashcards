@@ -103,7 +103,7 @@ def get_cards(cardbase_name):
     cards = Cards.query.filter_by(cardbase_id=cardbase.id).all()
     cards_data = [{"key" : card.key, "translation" : card.value} for card in cards] if cards else []
     
-    return jsonify({"langInfo": [cardbase.primary_language, cardbase.translation_language],
+    return jsonify({"langInfo": {"key" : cardbase.primary_language, "translation" : cardbase.translation_language},
                    "cards": cards_data}), 200
 
 @main.route('/delete_card/<cardbase_name>/<card_name>', methods=["DELETE"])

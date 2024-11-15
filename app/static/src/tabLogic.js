@@ -1,6 +1,6 @@
-import {getDataRequest, removeDataRequest } from "./requestHandler.js";
+import { removeDataRequest } from "./requestHandler.js";
 
-const settingsButton = document.getElementById("settingsButton");
+export const settingsButton = document.getElementById("settingsButton");
 const settingsContainer = document.getElementById("settingsContainer"); 
 const closeButton = document.getElementById("closeButton");
 const tabContainer = document.getElementById("tabContainer");
