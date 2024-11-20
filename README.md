@@ -1,5 +1,6 @@
 <div align="center">
-## Flashcards
+    
+# Flashcards
 
 A simple flashcard application for a small group of users. It is designed to allow users create whole bases of cards and use them for effective learning.
 
