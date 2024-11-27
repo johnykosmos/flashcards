@@ -30,13 +30,17 @@ A simple flashcard application for a small group of users. It is designed to all
     ```
     source venv/bin/activate
     ```
-5. Set environment variables in app.py.
+5. Install required packages.
+    ```
+    pip install -r requirements.txt
+    ```
+6. Set environment variables in app.py.
     ```
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flashcards.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = "ilovecats"
     ```
-6. Run the flask server.
+7. Run the flask server.
     ```
     flask run 
     ```
