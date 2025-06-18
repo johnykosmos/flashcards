@@ -8,52 +8,63 @@ A simple flashcard application for a small group of users. It is designed to all
 
 ## Installation
 ### Prerequisities
-- Python3.x installed.
-- A database ex. SQLite.
-- A virtual environment like venv.
+- Python3.x installed (versions below 3.13).
+- A database (e.g., SQLite).
+- A virtual environment tool like venv or Docker.
 
-### Steps
+### Deployment with venv
 1. Clone the repository.
     ```
     git clone https://github.com/johnykosmos/flashcards.git
+    cd path/to/flashcards
     ```
-2. Navigate to the cloned directory.
-    ```
-    cd path/to/flashcards 
-    ```
-3. Create a virtual environment.
+2. Create a virtual environment.
     ```
     python3 -m venv venv 
     ```
-4. Source the venv.
+3. Source the venv.
     - on macOS/Linux:
     ```
     source venv/bin/activate
     ```
-5. Install required packages.
+4. Install required packages.
     ```
     pip install -r requirements.txt
     ```
-6. Set environment variables in app.py.
+5. Set environment variables in app.py. For example:
     ```
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flashcards.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = "ilovecats"
     ```
-7. Run the flask server.
+6. Run the flask server.
     ```
     flask run 
+    ```
+### Deployment with Docker
+1. Clone the repository.
+    ```
+    git clone https://github.com/johnykosmos/flashcards.git
+    cd path/to/flashcards
+    ```
+2. Build the Docker image:
+    ```
+    docker build -t flashcards-app .
+    ```
+
+3. Run the Docker container:
+    ```
+    docker run -p 5000:5000 flashcards-app
     ```
 
 ## Features
 
-### Frontend
+### Client
 - Simple user interface styled to look like Google Translate.
-- Text-To-Speech function for every card created using Web Speech Chrome API. `(MIGHT NOT WORK IN BROWSER OTHER THAN CHROME)`
-- Create cardbases, add cards or remove everything above!
-- Assign proper languages for the base language and the translation.
-### Backend
-- Simple Database model using SQLAlchemy ORM for user, cardbase and language data.
-- Simple CLI for managing key parts of the database.
+- Text-To-Speech function for reading words in available languages. `(MIGHT NOT WORK IN BROWSER OTHER THAN CHROME)`
+- UI that allows the user to create cardbases, add cards or remove them.
+
+### Server
+- Simple Database model using SQLAlchemy ORM for managing user, cardbase and language data.
+- Simple CLI for database manipulation.
 - Flask built-in session management.
-- Not so scalable.
