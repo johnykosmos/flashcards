@@ -1,46 +1,58 @@
-from flask import Blueprint, render_template, request, jsonify, session
+from functools import wraps
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
 from models import Cardbase, Cards, Languages, db, User
 
 
 main = Blueprint('main', __name__)
 
 
-@main.route('/', methods=["GET"])
-def get_index():
-    if 'user_id' in session:
-        user_id = session['user_id']
-        cardbases = Cardbase.query.filter_by(user_id=user_id).all()
+def login_required(f):
+    @wraps(f)
+    def check_for_login(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('main.login'))
 
-        return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases)        
+        if not User.query.get(session['user_id']):
+            session.clear()
+            return redirect(url_for('main.login'))
 
-    return render_template("login.html", action_route='/')
+        return f(*args, **kwargs)
 
-@main.route('/', methods=["POST"])
+    return check_for_login
+
+
+@main.route('/login', methods=["GET", "POST"])
 def login():
-    login = request.form["login"]
-    password = request.form["password"]
-    user = User.query.filter_by(login=login, password=password).first() 
+    if request.method == "POST":
+        username = request.form["login"]
+        password = request.form["password"]
+        user = User.query.filter_by(login=username).first() 
 
-    if user:
-        session['user_id'] = user.id
-        cardbases = Cardbase.query.filter_by(user_id=user.id)
-        return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases)
+        if user and user.password == password:
+            session['user_id'] = user.id
+            return redirect(url_for('main.home'))
 
-    return render_template("login.html", action_route='/')
+    return render_template("login.html", action_route='/login')
+
+
+@main.route('/', methods=["GET"])
+@login_required
+def home():
+    user_id = session['user_id']
+    cardbases = Cardbase.query.filter_by(user_id=user_id).all()
+    return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases)        
+
 
 @main.route('/get_language', methods=["GET"])
+@login_required
 def get_language():
     languages = Languages.query.all()
-
     data = [{'name': language.name, 'value': language.acronym} for language in languages]
-
     return jsonify(data)
 
 @main.route('/create_cardbase', methods=["POST"])
+@login_required
 def create_cardbase():
-    if 'user_id' not in session:
-        return '', 400
-
     primary_lang = request.form["lang1"]
     translation_lang = request.form["lang2"]
     name = request.form["name"]
@@ -53,10 +65,8 @@ def create_cardbase():
     return jsonify({"message": "Cardbase created successfully."}), 201
 
 @main.route('/delete_cardbase/<cardbase_name>', methods=["DELETE"])
+@login_required
 def delete_cardbase(cardbase_name):
-    if 'user_id' not in session:
-        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
-
     cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
     
     if not cardbase:
@@ -72,10 +82,8 @@ def delete_cardbase(cardbase_name):
     return jsonify({"message": f"Cardbase {cardbase_name} deleted succesfully!"}), 200
 
 @main.route('/add_card/<cardbase_name>', methods=["POST"])
+@login_required
 def add_card(cardbase_name):
-    if 'user_id' not in session:
-        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
-    
     cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
 
     if not cardbase:
@@ -92,10 +100,8 @@ def add_card(cardbase_name):
     return jsonify({"message": "Card added successfully."}), 201
 
 @main.route('/get_cards/<cardbase_name>', methods=["GET"])
+@login_required
 def get_cards(cardbase_name):
-    if 'user_id' not in session:
-        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
-
     cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
     if not cardbase:
         return jsonify({"message": f"No cardbase named {cardbase_name}"}), 404
@@ -107,10 +113,8 @@ def get_cards(cardbase_name):
                    "cards": cards_data}), 200
 
 @main.route('/delete_card/<cardbase_name>/<card_name>', methods=["DELETE"])
+@login_required
 def delete_card(cardbase_name, card_name):
-    if 'user_id' not in session:
-        return jsonify({"message": "To proceed with this operation you have to be logged in"}), 400
-
     cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
 
     if not cardbase:
