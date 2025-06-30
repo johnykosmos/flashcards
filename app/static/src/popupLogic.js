@@ -127,12 +127,12 @@ async function buildCreateCardbasePopup(){
 
     const languages = await getDataRequest("/get_language");
 
-    const lang1 = createSelect("lang1", languages, 5, 14);
-    const lang2 = createSelect("lang2", languages, 5, 14);
+    const keyLang = createSelect("keyLang", languages.data, 5, 14);
+    const transLang = createSelect("transLang", languages.data, 5, 14);
     const cbName = createInput("Name", 5, 25);
 
-    selectDiv.appendChild(lang1);
-    selectDiv.appendChild(lang2);
+    selectDiv.appendChild(keyLang);
+    selectDiv.appendChild(transLang);
     inputDiv.appendChild(cbName);
     
     popupContent.appendChild(selectDiv);

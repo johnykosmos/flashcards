@@ -85,8 +85,8 @@ export function popCard(card){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data){ 
-        setLocalConfig(data);      
+    if(data.data){ 
+        setLocalConfig(data.data);      
         return true;
     }
     storedCards = [];

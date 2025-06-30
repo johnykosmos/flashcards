@@ -5,7 +5,7 @@ import click
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flashcards.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////app/flashcards.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "ilovecats"
 available_languages = [["English", "en-US"], ["French", "fr-FR"], ["Spanish", "es-ES"]]
