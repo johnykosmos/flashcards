@@ -4,4 +4,3 @@ env/
 app/instance/
 app/flashcards.db
 app/__pycache__
-Dockerfile
