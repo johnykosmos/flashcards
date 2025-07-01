@@ -59,8 +59,10 @@ def create_cardbase():
     translation_lang = request.form["transLang"]
     name = request.form["name"]
 
-    new_cardbase = Cardbase(name=name, primary_language=primary_lang, translation_language=translation_lang, user_id=session['user_id']) 
+    if Cardbase.query.filter_by(name=name, user_id=session["user_id"]).first():
+        return respond_json(message="Cardbase name is already occupied!", status_code=409)
 
+    new_cardbase = Cardbase(name=name, primary_language=primary_lang, translation_language=translation_lang, user_id=session["user_id"]) 
     db.session.add(new_cardbase)
     db.session.commit()
 
@@ -69,8 +71,7 @@ def create_cardbase():
 @main.route('/delete_cardbase/<cardbase_name>', methods=["DELETE"])
 @login_required
 def delete_cardbase(cardbase_name):
-    cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
-    
+    cardbase = Cardbase.query.filter_by(name=cardbase_name, user_id=session['user_id']).first()
     if not cardbase:
         return respond_json(message=f"No cardbase named {cardbase_name}", status_code=404)
 
@@ -86,13 +87,15 @@ def delete_cardbase(cardbase_name):
 @main.route('/add_card/<cardbase_name>', methods=["POST"])
 @login_required
 def add_card(cardbase_name):
-    cardbase = Cardbase.query.filter_by(name=cardbase_name).first()
-
+    cardbase = Cardbase.query.filter_by(name=cardbase_name, user_id=session['user_id']).first()
     if not cardbase:
         return respond_json(message=f"No cardbase named {cardbase_name}", status_code=404)
 
     key = request.form["key"]
     translation = request.form["translation"]
+
+    if Cards.query.filter_by(key=key, value=translation, cardbase_id=cardbase.id).first():
+        return respond_json(message="Card is already there!", status_code=409) 
 
     new_card = Cards(key=key, value=translation, cardbase_id=cardbase.id)
 
@@ -104,7 +107,7 @@ def add_card(cardbase_name):
 @main.route('/get_cards/<cardbase_name>', methods=["GET"])
 @login_required
 def get_cards(cardbase_name):
-    cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
+    cardbase = Cardbase.query.filter_by(name=cardbase_name, user_id=session['user_id']).first() 
     if not cardbase:
         return respond_json(message=f"No cardbase named {cardbase_name}", status_code=404)
     
@@ -116,13 +119,11 @@ def get_cards(cardbase_name):
 @main.route('/delete_card/<cardbase_name>/<card_name>', methods=["DELETE"])
 @login_required
 def delete_card(cardbase_name, card_name):
-    cardbase = Cardbase.query.filter_by(name=cardbase_name).first() 
-
+    cardbase = Cardbase.query.filter_by(name=cardbase_name, user_id=session['user_id']).first() 
     if not cardbase:
         return respond_json(message=f"No cardbase named {cardbase_name}", status_code=404)
 
     card = Cards.query.filter_by(key=card_name, cardbase_id=cardbase.id).first()
-
     if not card:
         return respond_json(message=f"No card like that", status_code=404)
 
