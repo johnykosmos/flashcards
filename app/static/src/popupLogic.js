@@ -161,6 +161,8 @@ function buildRemoveCardbasePopup(){
     popupContent.appendChild(text);
 
     const removeFromSelect = function(){
+        storedCards.length = 0;
+        localStorage.removeItem("cardbase");
         const cardsList = cardbaseTab.element.querySelector(".dataTable").querySelector("tbody");
         cardsList.innerHTML = "";
         selectedCardbase.remove(selectedCardbase.selectedIndex); 

@@ -48,5 +48,6 @@ export function cardbaseInit(){
 async function loadCardbaseToTable(cardbaseName){
     const cardsLoaded = await loadCardBase(`/get_cards/${cardbaseName}`);
         if(cardsLoaded){
-            storedCards.forEach((card) => addToDataTable(card, `/delete_card/${cardbaseName}/`, () => popCard(card)));        }
+            storedCards.forEach((card) => addToDataTable(card, `/delete_card/${cardbaseName}/`, () => popCard(card)));        
+        }
 }
