@@ -14,21 +14,23 @@ const langInfo = {};
 export let storedCards = [];
 let currentLangOrder = [];
 let lastKey = -1; // offset to draw the first card for sure
-let lastPlayedLang;
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
-let voicesLoaded = false;
+let loadedVoices = [];
 
 
-function speakText(text, language){
-    synth.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    if(language !== lastPlayedLang){
+function loadVoices() {
+    for (let i = 0; i < currentLangOrder.length; i++) {
         const voices = synth.getVoices();
-        const selectedVoice = voices.find(voice => voice.lang === language);
-        utterance.voice = selectedVoice;
+        const selectedVoice = voices.find(voice => voice.lang === currentLangOrder[i]);
+        loadedVoices[i] = selectedVoice;
     }
+}
+
+function speakText(index, text, language){
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = loadedVoices[index];
     utterance.lang = language;
     synth.speak(utterance);
 }
@@ -38,7 +40,7 @@ function handleTTSButtons(){
     card.forEach((side, index) => {
         const ttsButton = side.querySelector(".ttsButton"); 
         ttsButton.addEventListener("click", () =>{ 
-            speakText(side.innerText, currentLangOrder[index])
+            speakText(index, side.innerText, currentLangOrder[index])
         });
     });
 }
@@ -55,7 +57,9 @@ function setLocalConfig(data){
         storedCards = data.cards;
         lastKey = -1;
         setCards();    
-    }
+        return true;
+    } 
+    return false;
 }
 
 export function setCards(){
@@ -70,6 +74,7 @@ export function setCards(){
         backWord.innerText = storedCards[key].key;
         setLangOrder(langInfo.translation, langInfo.key);
     }
+    loadVoices();
 }
 
 export function popCard(card){
@@ -85,11 +90,10 @@ export function popCard(card){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data){ 
-        setLocalConfig(data);      
+    if(data.data && setLocalConfig(data.data)){ 
         return true;
-    }
-    storedCards = [];
+    } 
+    storedCards.length = 0;
     frontWord.innerText = "";
     backWord.innerText = "";
     return false;

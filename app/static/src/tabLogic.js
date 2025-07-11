@@ -38,6 +38,9 @@ export function tabsInit(){
 
 function setActiveTab(element, index){
     if(activeTab.tab){
+        if (activeTab.tab === element) {
+            return;
+        }
         activeTab.tab.classList.remove("active");
         tabsContent[activeTab.index].style.visibility = "hidden";
     }
