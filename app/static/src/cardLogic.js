@@ -17,7 +17,6 @@ let lastKey = -1; // offset to draw the first card for sure
 let lastPlayedLang;
 let mistakeCounter = 0;
 let hasAnimationStarted = false;
-let voicesLoaded = false;
 
 
 function speakText(text, language){
@@ -53,9 +52,12 @@ function setLocalConfig(data){
     langInfo.translation = data.langInfo.translation;
     if(data.cards.length !== 0){
         storedCards = data.cards;
+        console.log(storedCards);
         lastKey = -1;
         setCards();    
-    }
+        return true;
+    } 
+    return false;
 }
 
 export function setCards(){
@@ -85,11 +87,10 @@ export function popCard(card){
 
 export async function loadCardBase(action){
     const data = await getDataRequest(action);
-    if(data.data){ 
-        setLocalConfig(data.data);      
+    if(data.data && setLocalConfig(data.data)){ 
         return true;
-    }
-    storedCards = [];
+    } 
+    storedCards.length = 0;
     frontWord.innerText = "";
     backWord.innerText = "";
     return false;
