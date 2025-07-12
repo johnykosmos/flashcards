@@ -44,7 +44,7 @@
         <div class="tabContent" id="tabContent">
             <div class="tab" id="cards">
                 <div class="dropdownListContainer">
-                    <select class="dropdownList">
+                    <select class="dropdownList" id="cardbasesList" style="height: 4vh; width: 25vh;">
                         {% for base in cardbases %}
                             <option value="{{ base.name }}"> {{base.name}} </option>
                         {% endfor %}
@@ -61,7 +61,10 @@
                     </div>
                 </div>
             </div>
-            <div class="tab" id="tab2">tab2</div>
+            <div class="tab" id="config">
+                <p> <i> Logged as <b>{{ user_name }}</b> </i> </p>
+                <button class="manageButton" id="logoutButton" style="background-color: red;"> Log out </button>
+            </div>
         </div>
         {% include "components/popup.html" with context %}
         </div>

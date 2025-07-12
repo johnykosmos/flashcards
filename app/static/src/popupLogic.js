@@ -15,7 +15,8 @@ const quitButton = popup.querySelector(".quitButton");
 export const PopupType = {
     addCardbase: buildCreateCardbasePopup,
     rmCardbase: buildRemoveCardbasePopup,
-    addCard: buildAddCardPopup
+    addCard: buildAddCardPopup,
+    logout: buildLogoutPopup
 }
 
 let lastPopupType;
@@ -94,6 +95,13 @@ function addToSelect(dataName, tab){
     select.value = name;
 }
 
+function addPopupText(text) {
+    const textDiv = document.createElement("div");
+    textDiv.classList.add("popupText");
+    textDiv.innerText = text;
+    popupContent.appendChild(textDiv);
+}
+
 function submitButtonHandler(request, callback, exit=false){
     if(lastSubmitHandler)
         popupForm.removeEventListener("submit", lastSubmitHandler);
@@ -152,13 +160,9 @@ function buildRemoveCardbasePopup(){
 
     popupForm.action = `/delete_cardbase/${selectedCardbase.value}`;
 
-    const text = document.createElement("div");
-    text.classList.add("popupText");
-    text.innerText = `Are you sure you want to delete "${selectedCardbase.value}" cardbase?`;
+    addPopupText(`Are you sure you want to delete "${selectedCardbase.value}" cardbase?`);
 
     submitButton.innerText = "Yes";
-
-    popupContent.appendChild(text);
 
     const removeFromSelect = function(){
         storedCards.length = 0;
@@ -178,14 +182,10 @@ function buildAddCardPopup(){
     const selectedCardbase = cardbaseTab.element.querySelector(".dropdownList"); 
     popupForm.action = `/add_card/${selectedCardbase.value}`;
 
-    const text = document.createElement("div");
-    text.classList.add("popupText");
-    text.innerText = "Please, type in the word and it's translation";
+    addPopupText("Type in the word and it's translation, please");
 
     const inputDiv = document.createElement("div"); 
     inputDiv.classList.add("inputPair");    
-
-    popupContent.appendChild(text);
 
     const key = createInput("Key", 5, 12);
     const translation = createInput("Translation", 5, 12);
@@ -206,4 +206,13 @@ function buildAddCardPopup(){
         storedCards.push(card);
         setCards();
     }, false);
+}
+
+function buildLogoutPopup() {
+    popupForm.action = `/logout`;
+    addPopupText("Are you sure you want to logout?");
+    submitButton.innerText = "Log out";
+    submitButtonHandler(formPostRequest, () => {
+        window.location.replace("/login");
+    }, true);
 }

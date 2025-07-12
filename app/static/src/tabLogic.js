@@ -91,9 +91,9 @@ export function createRemoveButton(action, callback){
 }
 
 export function updateMngButtons(mngButtons){
-    const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
+    const selectedList = tabsContent[activeTab.index].querySelector(".dropdownList");
     mngButtons.forEach((element) => {
-        if(!selectedList.value && element.mayInactive){
+        if(!selectedList || (!selectedList.value && element.mayInactive)){
             element.button.classList.add("inactive");
             element.button.removeEventListener("click", element.eventListener);
         }

@@ -51,8 +51,6 @@
 }
 
 .dropdownList{
-    height: 4vh;
-    width: 25vh;
     color: grey;
     border: 0.5vh solid lightgrey;
     border-radius: 1.5vh;
