@@ -1,5 +1,6 @@
 import { getDataRequest } from "./requestHandler.js";
 import { settingsButton } from "./tabLogic.js";
+import { maxAttempts } from "./configTab.js";
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -184,7 +185,7 @@ export function handleCardLogic(){
             else{
                 animateCard("badAnswer", 800);
                 mistakeCounter++;
-                if(mistakeCounter === 3){
+                if(mistakeCounter === maxAttempts){
                     mistakeCounter = 0;
                     setTimeout(() => getNextCard(), 800);
                 }

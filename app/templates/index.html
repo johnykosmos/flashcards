@@ -63,7 +63,15 @@
             </div>
             <div class="tab" id="config">
                 <p> <i> Logged as <b>{{ user_name }}</b> </i> </p>
-                <button class="manageButton" id="logoutButton" style="background-color: red;"> Log out </button>
+                <div class="configOptionDiv" id="attemptsOption">
+                    <p> Attempts before failing: </p>
+                    <select class="dropdownList" id="attemptsList" style="height: 4vh; width: 7vh;">
+                        {% for i in range(1, 6, 2) %}
+                            <option value="{{ i }}"> {{ i }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="manageButton" id="logoutButton" style="background-color: red; position: absolute; top: 160%; left: 100%;"> Log out </button>
             </div>
         </div>
         {% include "components/popup.html" with context %}
