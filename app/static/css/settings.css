@@ -51,8 +51,6 @@
 }
 
 .dropdownList{
-    height: 4vh;
-    width: 25vh;
     color: grey;
     border: 0.5vh solid lightgrey;
     border-radius: 1.5vh;
@@ -86,6 +84,21 @@
     padding: 1vh 1vh 0.3vh 1vh;
     color: grey;
     font-weight: bold; 
+}
+
+.configOptionDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1.4vh;
+    padding: 1vh;
+    border: none;
+    border-radius: 2vh;
+    border-top: 0.3vh #4285F4 solid;
+    border-bottom: 0.3vh #4285F4 solid;
+    font-weight: bold;
+    color: #4285F4;
 }
 
 .manageButtonContainer{

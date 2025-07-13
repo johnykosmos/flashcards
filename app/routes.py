@@ -41,8 +41,9 @@ def login():
 @login_required
 def home():
     user_id = session['user_id']
+    user = User.query.filter_by(id=user_id).first()
     cardbases = Cardbase.query.filter_by(user_id=user_id).all()
-    return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases)        
+    return render_template("index.html", headers=["Key", "Translation"], cardbases=cardbases, user_name=user.login)        
 
 
 @main.route('/get_language', methods=["GET"])
@@ -131,3 +132,10 @@ def delete_card(cardbase_name, card_name):
     db.session.commit() 
 
     return respond_json(message=f"Card {card_name} deleted succesfully!")
+
+@main.route('/logout', methods=["POST"])
+@login_required
+def logout():
+    session.clear()
+    return respond_json(message="Logged out successfully!")
+

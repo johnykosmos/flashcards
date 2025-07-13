@@ -31,6 +31,10 @@
             </div>
         </div>
         <input id="cardInput" type="text" autocomplete="off" placeholder="Type your answer here!"> 
+        <div class="controlContainer">
+            <button class="manageButton" id="gameControlButton" style="background-color: #39FF14;"> ▶ </button>
+            <p id="guessCounter" style="padding: 1vh; visibility: hidden; text-align: center; font-weight: bold; color: grey; font-size: 1.5em"></p>
+        </div>
         <div class="settingsButtonContainer">
             <button class="settingsButton" id="settingsButton">
                 <img src="{{ url_for('static', filename='img/list.png') }}" alt="menu" style="width: 55%; height: 65%; padding-top: 0.5vh; filter: invert(100%) brightness(100%);">
@@ -44,7 +48,7 @@
         <div class="tabContent" id="tabContent">
             <div class="tab" id="cards">
                 <div class="dropdownListContainer">
-                    <select class="dropdownList">
+                    <select class="dropdownList" id="cardbasesList" style="height: 4vh; width: 25vh;">
                         {% for base in cardbases %}
                             <option value="{{ base.name }}"> {{base.name}} </option>
                         {% endfor %}
@@ -61,11 +65,20 @@
                     </div>
                 </div>
             </div>
-            <div class="tab" id="tab2">tab2</div>
+            <div class="tab" id="config">
+                <p> <i> Logged as <b>{{ user_name }}</b> </i> </p>
+                <div class="configOptionDiv" id="attemptsOption">
+                    <p> Attempts before failing: </p>
+                    <select class="dropdownList" id="attemptsList" style="height: 4vh; width: 7vh;">
+                        {% for i in range(1, 6, 2) %}
+                            <option value="{{ i }}"> {{ i }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="manageButton" id="logoutButton" style="background-color: red; position: absolute; top: 160%; left: 100%;"> Log out </button>
+            </div>
         </div>
         {% include "components/popup.html" with context %}
-        </div>
-        <div class="tabContent" id="tabContent">
         </div>
     </div>
 

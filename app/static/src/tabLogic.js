@@ -1,3 +1,4 @@
+import { gameStarted, updateGameControl } from "./gameplayControl.js";
 import { removeDataRequest } from "./requestHandler.js";
 
 export const settingsButton = document.getElementById("settingsButton");
@@ -12,10 +13,13 @@ export const activeTab = {};
 
 export function handleSettingsSidebar(){
     settingsButton.addEventListener("click", () => {
-        settingsContainer.classList.add("open");
-        settingsContainer.classList.remove("close");
+        if (!gameStarted) {
+            settingsContainer.classList.add("open");
+            settingsContainer.classList.remove("close");
+        }
     }); 
     closeButton.addEventListener("click", () => {
+        updateGameControl();
         settingsContainer.classList.add("close");
         settingsContainer.classList.remove("open");
     });   
@@ -90,12 +94,13 @@ export function createRemoveButton(action, callback){
     return button;
 }
 
-export function updateMngButtons(mngButtons){
-    const selectedList =  tabsContent[activeTab.index].querySelector(".dropdownList");
+export function updateMngButtons(mngButtons, condition=null){
+    const selectedList = tabsContent[activeTab.index].querySelector(".dropdownList");
     mngButtons.forEach((element) => {
-        if(!selectedList.value && element.mayInactive){
+        element.button.removeEventListener("click", element.eventListener);
+        if((selectedList && (!selectedList.value && element.mayInactive)) 
+            || condition){
             element.button.classList.add("inactive");
-            element.button.removeEventListener("click", element.eventListener);
         }
         else{
             element.button.classList.remove("inactive");

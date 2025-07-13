@@ -1,5 +1,8 @@
 import { getDataRequest } from "./requestHandler.js";
 import { settingsButton } from "./tabLogic.js";
+import { maxAttempts } from "./configTab.js";
+import { cardsInGame, finishGame, gameStarted } from "./gameplayControl.js";
+
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -7,15 +10,18 @@ const frontWord = document.getElementById("frontWord");
 const backWord = document.getElementById("backWord");
 const cardInput = document.getElementById("cardInput");
 const showNext = document.getElementById("showNext");
+const guessCounter = document.getElementById("guessCounter");
 
 const synth = window.speechSynthesis;
 const langInfo = {};
 
 export let storedCards = [];
 let currentLangOrder = [];
+let nextBackWord = "";
 let lastKey = -1; // offset to draw the first card for sure
 let mistakeCounter = 0;
-let hasAnimationStarted = false;
+let currentCard = null;
+export let hasAnimationStarted = false;
 let loadedVoices = [];
 
 
@@ -63,17 +69,19 @@ function setLocalConfig(data){
 }
 
 export function setCards(){
-    const key = getCardKey();
+    const key = getCardKey(storedCards);
+    currentCard = storedCards[key];
     if(Math.floor(Math.random() * 2) === 0){
-        frontWord.innerText = storedCards[key].key;
-        backWord.innerText = storedCards[key].translation;
+        frontWord.innerText = currentCard.key;
+        backWord.innerText = currentCard.translation;
         setLangOrder(langInfo.key, langInfo.translation);
     }
     else{
-        frontWord.innerText = storedCards[key].translation;
-        backWord.innerText = storedCards[key].key;
+        frontWord.innerText = currentCard.translation;
+        backWord.innerText = currentCard.key;
         setLangOrder(langInfo.translation, langInfo.key);
     }
+    
     loadVoices();
 }
 
@@ -119,11 +127,10 @@ function startCardFlip(newFrontWord, newBackWord){
     }, 2000);
 
     showNext.classList.add("visible");
-    showNext.addEventListener("click", () => flipCardLeft(newBackWord));
+    nextBackWord = newBackWord;
 }
 
 function flipCardLeft(newBackWord){
-    showNext.removeEventListener("click", () => flipCardLeft(newBackWord));
     showNext.classList.remove("visible");
     backCard.classList.add("flipBackLeft");    
     animateCard("flipFrontLeft", 3000);
@@ -140,22 +147,21 @@ function flipCardLeft(newBackWord){
 
 }
 
-function getCardKey(){
+function getCardKey(cardStorage){
     let key;
-    do{
-        key = Math.floor(Math.random() * storedCards.length);
-    }while(key === lastKey);
+    do {
+        key = Math.floor(Math.random() * cardStorage.length);
+    } while(key === lastKey);
 
-    if(storedCards.length > 1)
-        lastKey = key;
-
+    lastKey = key;
     return key;
 }
 
 function getNextCard(){
-    const key = getCardKey();
-    const newWord = storedCards[key].key;
-    const newTranslation = storedCards[key].translation;
+    const key = cardsInGame.length !== 1 ? getCardKey(cardsInGame) : 0;
+    currentCard = cardsInGame[key];
+    const newWord = currentCard.key;
+    const newTranslation = currentCard.translation;
     hasAnimationStarted = true;
     cardInput.blur();
     cardInput.disabled = true;
@@ -174,17 +180,28 @@ function getNextCard(){
 export function handleCardLogic(){
     handleTTSButtons();
 
+    showNext.addEventListener("click", () => flipCardLeft(nextBackWord));
+
     cardInput.addEventListener("keydown", (event) => {
-        if(storedCards.length !== 0 && 
+        if(gameStarted && 
             event.key === "Enter" && !hasAnimationStarted){
             if(backWord.innerText === cardInput.value){
                 animateCard("goodAnswer", 1000); 
+                cardsInGame.splice(cardsInGame.indexOf(currentCard), 1);
+                const cardsPassed = storedCards.length - cardsInGame.length; 
+                const guessedCards = `Guessed ${cardsPassed} out of ${storedCards.length}`;
+                guessCounter.innerText = guessedCards;
+                if (cardsPassed === storedCards.length) {
+                    hasAnimationStarted = false;
+                    finishGame(true);
+                    return;
+                }
                 setTimeout(() => getNextCard(), 1000);
             }
             else{
                 animateCard("badAnswer", 800);
                 mistakeCounter++;
-                if(mistakeCounter === 3){
+                if(mistakeCounter === maxAttempts){
                     mistakeCounter = 0;
                     setTimeout(() => getNextCard(), 800);
                 }
