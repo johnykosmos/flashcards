@@ -1,6 +1,7 @@
 import { getDataRequest } from "./requestHandler.js";
 import { settingsButton } from "./tabLogic.js";
 import { maxAttempts } from "./configTab.js";
+import { gameStarted } from "./gameplayControl.js";
 
 const frontCard = document.getElementById("cardFront");
 const backCard = document.getElementById("cardBack");
@@ -16,7 +17,7 @@ export let storedCards = [];
 let currentLangOrder = [];
 let lastKey = -1; // offset to draw the first card for sure
 let mistakeCounter = 0;
-let hasAnimationStarted = false;
+export let hasAnimationStarted = false;
 let loadedVoices = [];
 
 
@@ -176,6 +177,7 @@ export function handleCardLogic(){
     handleTTSButtons();
 
     cardInput.addEventListener("keydown", (event) => {
+        if (!gameStarted) return;
         if(storedCards.length !== 0 && 
             event.key === "Enter" && !hasAnimationStarted){
             if(backWord.innerText === cardInput.value){

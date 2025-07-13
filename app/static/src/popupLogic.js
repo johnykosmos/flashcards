@@ -3,7 +3,6 @@ import { formPostRequest, formDeleteRequest, getDataRequest } from "./requestHan
 import {updateMngButtons, addToDataTable} from "./tabLogic.js"
 import {cardbaseTab} from "./cardbaseTab.js"
 import {popCard, setCards, storedCards } from "./cardLogic.js";
-import { updateGameControl } from "./gameplayControl.js";
 
 
 const popup = document.getElementById("popup");
@@ -174,8 +173,6 @@ function buildRemoveCardbasePopup(){
         selectedCardbase.dispatchEvent(new Event("input"));
         lastPopupType = null;
         updateMngButtons(cardbaseTab.mngButtons);
-        updateGameControl();
-        setCards();
     }
 
     submitButtonHandler(formDeleteRequest, removeFromSelect, true);
