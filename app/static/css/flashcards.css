@@ -103,6 +103,13 @@ body {
     visibility: hidden;
 }
 
+.controlContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .settingsButtonContainer{
     padding: 25vh 0 0 30vh;
 }

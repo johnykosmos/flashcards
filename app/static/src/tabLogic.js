@@ -1,4 +1,4 @@
-import { updateGameControl } from "./gameplayControl.js";
+import { gameStarted, updateGameControl } from "./gameplayControl.js";
 import { removeDataRequest } from "./requestHandler.js";
 
 export const settingsButton = document.getElementById("settingsButton");
@@ -13,8 +13,10 @@ export const activeTab = {};
 
 export function handleSettingsSidebar(){
     settingsButton.addEventListener("click", () => {
-        settingsContainer.classList.add("open");
-        settingsContainer.classList.remove("close");
+        if (!gameStarted) {
+            settingsContainer.classList.add("open");
+            settingsContainer.classList.remove("close");
+        }
     }); 
     closeButton.addEventListener("click", () => {
         updateGameControl();

@@ -31,7 +31,10 @@
             </div>
         </div>
         <input id="cardInput" type="text" autocomplete="off" placeholder="Type your answer here!"> 
-        <button class="manageButton" id="gameControlButton" style="background-color: #39FF14;"> ▶ </button>
+        <div class="controlContainer">
+            <button class="manageButton" id="gameControlButton" style="background-color: #39FF14;"> ▶ </button>
+            <p id="guessCounter" style="padding: 1vh; visibility: hidden; text-align: center; font-weight: bold; color: grey; font-size: 1.5em"></p>
+        </div>
         <div class="settingsButtonContainer">
             <button class="settingsButton" id="settingsButton">
                 <img src="{{ url_for('static', filename='img/list.png') }}" alt="menu" style="width: 55%; height: 65%; padding-top: 0.5vh; filter: invert(100%) brightness(100%);">
