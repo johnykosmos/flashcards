@@ -3,6 +3,7 @@ import {handleSettingsSidebar, tabsInit} from "./tabLogic.js"
 import {cardbaseInit} from "./cardbaseTab.js"
 import {popupInit} from "./popupLogic.js"
 import {configTabInit } from "./configTab.js";
+import { updateGameControl } from "./gameplayControl.js";
 
 
 async function main(){
@@ -11,7 +12,8 @@ async function main(){
     cardbaseInit();
     configTabInit();
     popupInit();
-    handleSettingsSidebar()
+    handleSettingsSidebar();
+    updateGameControl();
     handleCardLogic(); 
 }
 

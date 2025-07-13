@@ -24,7 +24,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 10vh;
     gap: 5vh;
 }
 
@@ -104,7 +103,7 @@ body {
 }
 
 .settingsButtonContainer{
-    padding: 40vh 0 0 30vh;
+    padding: 25vh 0 0 30vh;
 }
 
 .settingsButton{

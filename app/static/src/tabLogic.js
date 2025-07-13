@@ -1,3 +1,4 @@
+import { updateGameControl } from "./gameplayControl.js";
 import { removeDataRequest } from "./requestHandler.js";
 
 export const settingsButton = document.getElementById("settingsButton");
@@ -16,6 +17,7 @@ export function handleSettingsSidebar(){
         settingsContainer.classList.remove("close");
     }); 
     closeButton.addEventListener("click", () => {
+        updateGameControl();
         settingsContainer.classList.add("close");
         settingsContainer.classList.remove("open");
     });   
@@ -90,12 +92,13 @@ export function createRemoveButton(action, callback){
     return button;
 }
 
-export function updateMngButtons(mngButtons){
+export function updateMngButtons(mngButtons, condition=null){
     const selectedList = tabsContent[activeTab.index].querySelector(".dropdownList");
     mngButtons.forEach((element) => {
-        if(!selectedList || (!selectedList.value && element.mayInactive)){
+        element.button.removeEventListener("click", element.eventListener);
+        if((selectedList && (!selectedList.value && element.mayInactive)) 
+            || condition){
             element.button.classList.add("inactive");
-            element.button.removeEventListener("click", element.eventListener);
         }
         else{
             element.button.classList.remove("inactive");

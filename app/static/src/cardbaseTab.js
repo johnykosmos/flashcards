@@ -1,4 +1,5 @@
 import { loadCardBase, storedCards, popCard } from "./cardLogic.js";
+import { updateGameControl } from "./gameplayControl.js";
 import {openPopup, PopupType} from "./popupLogic.js"
 import {updateMngButtons, addToDataTable} from "./tabLogic.js";
 
