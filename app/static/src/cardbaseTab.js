@@ -1,5 +1,4 @@
 import { loadCardBase, storedCards, popCard } from "./cardLogic.js";
-import { updateGameControl } from "./gameplayControl.js";
 import {openPopup, PopupType} from "./popupLogic.js"
 import {updateMngButtons, addToDataTable} from "./tabLogic.js";
 
@@ -11,11 +10,11 @@ const addCardButton = document.getElementById("addCardButton");
 
 const cardbaseMngButtons = [
     {button: addCardbaseButton, 
-        mayInactive: false, eventListener: () => openPopup(PopupType.addCardbase)},
+        mayInactive: false, eventListener: function() {openPopup(PopupType.addCardbase);}},
     {button: removeCardbaseButton, 
-        mayInactive: true, eventListener: () => openPopup(PopupType.rmCardbase)},
+        mayInactive: true, eventListener: function() {openPopup(PopupType.rmCardbase);}},
     {button: addCardButton,
-        mayInactive: true, eventListener: () => openPopup(PopupType.addCard)}
+        mayInactive: true, eventListener: function() {openPopup(PopupType.addCard);}}
 ]
 
 export const cardbaseTab = {element: cardbaseTabDOM,

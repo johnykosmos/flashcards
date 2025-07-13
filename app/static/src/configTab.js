@@ -9,7 +9,7 @@ const logoutButton = document.getElementById("logoutButton");
 
 const configMngButtons = [ 
     {button: logoutButton, mayInactive: false, 
-        eventListener: () => openPopup(PopupType.logout)}
+        eventListener: function() {openPopup(PopupType.logout);}}
 ];
 
 export const configTab = {element: configTabDOM, mngButtons: configMngButtons};
